@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin_base">5px</dimen>
+    <dimen name="margin_basex2">10px</dimen>
+    <dimen name="padding_base">5px</dimen>
+    <dimen name="padding_basex2">10px</dimen>
+</resources>
