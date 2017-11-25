@@ -4,12 +4,12 @@ package banhang.smartbill;
  * Created by MyPC on 25/11/2017.
  */
 
-public class HoaDonTest {
+public class ItemTest {
 private String name;
 private String price;
 private int number;
 
-    public HoaDonTest(String name, String price, int number){
+    public ItemTest(String name, String price, int number){
         this.name=name;
         this.price=price;
         this.number=number;

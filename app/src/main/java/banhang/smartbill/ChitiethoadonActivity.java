@@ -27,7 +27,7 @@ public class ChitiethoadonActivity extends Activity {
     SurfaceView cameraView;
     TextView customerName;
     ToggleButton cameraBtn;
-    ArrayList<HoaDonTest> arrHoaDonTest;
+    ArrayList<ItemTest> arrItemTest;
     ChitiethoadonAdapter adapter=null;
     ListView lvHoaDon=null;
 
@@ -55,15 +55,15 @@ public class ChitiethoadonActivity extends Activity {
         cameraView = (SurfaceView)findViewById(R.id.sv_camera_view);
         cameraBtn = (ToggleButton) findViewById(R.id.tb_camera);
         lvHoaDon = (ListView)findViewById(R.id.lv_item);
-        arrHoaDonTest = new ArrayList<HoaDonTest>();
-        adapter = new ChitiethoadonAdapter(this,R.layout.chitiethoadon_listview_custom, arrHoaDonTest);
+        arrItemTest = new ArrayList<ItemTest>();
+        adapter = new ChitiethoadonAdapter(this,R.layout.chitiethoadon_listview_custom, arrItemTest);
         lvHoaDon.setAdapter(adapter);
 
         for(int i=0;i<11;i++){
             String temp = "" ;
             temp += Integer.toString(i*1000);
-            HoaDonTest hd = new HoaDonTest("Do an vat"+temp,"20000d",2+i);
-            arrHoaDonTest.add(hd);
+            ItemTest hd = new ItemTest("Do an vat"+temp,"20000d",2+i);
+            arrItemTest.add(hd);
             adapter.notifyDataSetChanged();
         }
 

@@ -16,14 +16,14 @@ import java.util.List;
  * Created by MyPC on 25/11/2017.
  */
 
-public class ChitiethoadonAdapter extends ArrayAdapter<HoaDonTest> {
+public class ChitiethoadonAdapter extends ArrayAdapter<ItemTest> {
     private Activity context;
-    private List<HoaDonTest> dshoadon;
+    private List<ItemTest> dshoadon;
     private String[] arrTemp ;
 
 
 
-    public ChitiethoadonAdapter(Activity context, int layoutID, List<HoaDonTest> objects) {
+    public ChitiethoadonAdapter(Activity context, int layoutID, List<ItemTest> objects) {
         super(context, layoutID, objects);
         this.context = context;
         this.dshoadon = objects;
@@ -43,7 +43,7 @@ public class ChitiethoadonAdapter extends ArrayAdapter<HoaDonTest> {
         else holder = (ViewHolder) convertView.getTag();
 
 
-        final HoaDonTest hoadon = getItem(position);
+        final ItemTest hoadon = getItem(position);
 
 
         // Get view
