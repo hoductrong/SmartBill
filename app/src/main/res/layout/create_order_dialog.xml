@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layoutDirection="rtl">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="10dp"
+            android:src="@drawable/close_icon"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="15dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txv_title"
+            android:layout_alignBaseline="@id/spn_customer_list"
+            android:text="Khách hàng"/>
+        <AutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:tooltipText="Đinh Hồng Phi"
+            android:layout_marginStart="10dp"
+            android:id="@+id/spn_customer_list"
+            android:layout_toEndOf="@+id/txv_title"></AutoCompleteTextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/spn_customer_list"
+            android:layout_below="@+id/spn_customer_list"
+            android:layout_marginTop="10dp"
+            android:text="Tạo khách hàng mới"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tạo hóa đơn"
+            android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
+</LinearLayout>
