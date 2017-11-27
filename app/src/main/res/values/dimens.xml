@@ -10,4 +10,8 @@
     <dimen name="avata_padding">10dp</dimen>
     <dimen name="toggle_menu_text_size">20sp</dimen>
     <!--end toggle menu-->
+    <dimen name="margin_base">5px</dimen>
+    <dimen name="margin_basex2">10px</dimen>
+    <dimen name="padding_base">5px</dimen>
+    <dimen name="padding_basex2">10px</dimen>
 </resources>
