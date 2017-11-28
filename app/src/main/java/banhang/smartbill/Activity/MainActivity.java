@@ -1,5 +1,6 @@
 package banhang.smartbill.Activity;
 
+import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -25,6 +26,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import banhang.smartbill.Adapter.NavigationMenuAdapter;
+import banhang.smartbill.DAL.ProductAPI;
+import banhang.smartbill.DAL.TokenAPI;
 import banhang.smartbill.Entity.GrantTokenResult;
 import banhang.smartbill.Entity.MenuEntity;
 import banhang.smartbill.R;
@@ -53,6 +56,17 @@ public class MainActivity extends AppCompatActivity {
 
         setupDrawerToggle();
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                TokenAPI tokenApi = new TokenAPI();
+                String token = tokenApi.getToken();
+                ProductAPI productApi= new ProductAPI();
+                productApi.getProducts();
+            }
+        });
+        thread.start();
     }
 
     void setupToolbar(){
