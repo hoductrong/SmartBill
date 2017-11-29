@@ -23,7 +23,6 @@ public class ProductAPI {
             conn.setRequestProperty("Accept","application/json");
             if(TokenAPI.TOKEN != null)
                 conn.setRequestProperty("Authorization","Bearer " + TokenAPI.TOKEN);
-
             ArrayList<Product> products = tool.getResult(conn,new TypeToken<ArrayList<Product>>(){}.getType());
             return products;
         }catch(ProtocolException ex){
