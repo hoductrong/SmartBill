@@ -56,17 +56,6 @@ public class MainActivity extends AppCompatActivity {
 
         setupDrawerToggle();
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                TokenAPI tokenApi = new TokenAPI();
-                String token = tokenApi.getToken();
-                ProductAPI productApi= new ProductAPI();
-                productApi.getProducts();
-            }
-        });
-        thread.start();
     }
 
     void setupToolbar(){

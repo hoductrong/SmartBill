@@ -24,8 +24,11 @@ public class TokenAPI {
 
             String content = "grant_type=password&username="+username+"&password="+password;
             GrantTokenResult result = tool.getResult(conn,content,GrantTokenResult.class);
-            TOKEN = result.getAccess_token();
-            return result.getAccess_token();
+            if(result != null){
+                TOKEN = result.getAccess_token();
+                return result.getAccess_token();
+            }
+            return null;
         }catch(ProtocolException ex){
             return null;
         }
