@@ -16,7 +16,7 @@ public class Order extends BaseEntity {
     private String InterestRateId ;
     private Customer Customer;
     private List<String> Bill;
-    private  List<IdentityUser> IdentityUser;
+    private  IdentityUser IdentityUser;
     private  List<String> InterestRate;
     private List<OrderProduct> OrderProduct;
 
@@ -84,11 +84,11 @@ public class Order extends BaseEntity {
         Bill = bill;
     }
 
-    public List<IdentityUser> getIdentityUser() {
+    public IdentityUser getIdentityUser() {
         return IdentityUser;
     }
 
-    public void setIdentityUser(List<IdentityUser> identityUser) {
+    public void setIdentityUser(IdentityUser identityUser) {
         IdentityUser = identityUser;
     }
 
@@ -107,6 +107,4 @@ public class Order extends BaseEntity {
     public void setOrderProduct(List<OrderProduct> orderProduct) {
         OrderProduct = orderProduct;
     }
-
-
 }
