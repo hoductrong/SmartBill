@@ -21,6 +21,7 @@ public class TokenAPI {
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
             conn.setRequestProperty("Accept","application/json");
+
             String content = "grant_type=password&username="+username+"&password="+password;
             GrantTokenResult result = tool.getResult(conn,content,GrantTokenResult.class);
             TOKEN = result.getAccess_token();
