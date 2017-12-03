@@ -1,13 +1,17 @@
 package banhang.smartbill;
 
+import android.support.v4.app.Fragment;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -21,7 +25,7 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ChitiethoadonActivity extends Activity {
+public class ChitiethoadonActivity extends android.support.v4.app.Fragment {
     BarcodeDetector barcodeDetector;
     CameraSource cameraSource;
     SurfaceView cameraView;
@@ -30,11 +34,11 @@ public class ChitiethoadonActivity extends Activity {
     ArrayList<ItemTest> arrItemTest;
     ChitiethoadonAdapter adapter=null;
     ListView lvHoaDon=null;
-
+    View mView;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chitiethoadon);
+        mView = inflater.inflate(R.layout.activity_chitiethoadon,null);
 
         initVariables();
 
@@ -49,16 +53,18 @@ public class ChitiethoadonActivity extends Activity {
                 }
             }
         });
+        return  mView;
 
     }
     private void initVariables(){
-        cameraView = (SurfaceView)findViewById(R.id.sv_camera_view);
-        cameraBtn = (ToggleButton) findViewById(R.id.tb_camera);
-        lvHoaDon = (ListView)findViewById(R.id.lv_item);
+        cameraView = (SurfaceView)mView.findViewById(R.id.sv_camera_view);
+        cameraBtn = (ToggleButton) mView.findViewById(R.id.tb_camera);
+        lvHoaDon = (ListView)mView.findViewById(R.id.lv_item);
         arrItemTest = new ArrayList<ItemTest>();
-        adapter = new ChitiethoadonAdapter(this,R.layout.chitiethoadon_listview_custom, arrItemTest);
+        adapter = new ChitiethoadonAdapter(getActivity(),R.layout.chitiethoadon_listview_custom, arrItemTest);
         lvHoaDon.setAdapter(adapter);
 
+        //Generate item de test
         for(int i=0;i<11;i++){
             String temp = "" ;
             temp += Integer.toString(i*1000);
@@ -68,12 +74,12 @@ public class ChitiethoadonActivity extends Activity {
         }
 
         barcodeDetector =
-                new BarcodeDetector.Builder(this)
+                new BarcodeDetector.Builder(getActivity())
                         .setBarcodeFormats(Barcode.EAN_13)
                         .build();
 
         cameraSource = new CameraSource
-                .Builder(this, barcodeDetector)
+                .Builder(getActivity(), barcodeDetector)
                 .setRequestedPreviewSize(1280, 720)
                 .setAutoFocusEnabled(true)
                 .build();
@@ -106,7 +112,7 @@ public class ChitiethoadonActivity extends Activity {
     }
     public void startCamera(){
         try {
-            if (ContextCompat.checkSelfPermission(ChitiethoadonActivity.this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
 
                 cameraSource.start(cameraView.getHolder());
             }

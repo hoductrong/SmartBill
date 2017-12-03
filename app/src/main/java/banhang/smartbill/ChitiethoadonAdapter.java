@@ -1,6 +1,8 @@
 package banhang.smartbill;
 
 import android.app.Activity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +21,6 @@ import java.util.List;
 public class ChitiethoadonAdapter extends ArrayAdapter<ItemTest> {
     private Activity context;
     private List<ItemTest> dshoadon;
-    private String[] arrTemp ;
-
-
 
     public ChitiethoadonAdapter(Activity context, int layoutID, List<ItemTest> objects) {
         super(context, layoutID, objects);
@@ -35,51 +34,50 @@ public class ChitiethoadonAdapter extends ArrayAdapter<ItemTest> {
 
         if (convertView == null) {
             holder = new ViewHolder();
-            convertView = LayoutInflater.from(context).inflate(R.layout.chitiethoadon_listview_custom, null,
-                    false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.chitiethoadon_listview_custom, null, false);
             convertView.setTag(holder);
-            holder.editText1 = (EditText) convertView.findViewById(R.id.et_count);
+            holder.etCount = (EditText) convertView.findViewById(R.id.et_count);
+            holder.tvName = (TextView) convertView.findViewById(R.id.tv_name);
+            holder.tvPrice = (TextView) convertView.findViewById(R.id.tv_price);
+
         }
         else holder = (ViewHolder) convertView.getTag();
-
-
         final ItemTest hoadon = getItem(position);
-
-
-        // Get view
         holder.ref = position;
-        ImageView ivShoppingCart = (ImageView) convertView.findViewById(R.id.iv_shopping_cart);
-        ImageButton ibRemove = (ImageButton) convertView.findViewById(R.id.ib_remove_shopping_cart);
-        TextView tvName = (TextView) convertView.findViewById(R.id.tv_name);
-        TextView tvPrice = (TextView) convertView.findViewById(R.id.tv_price);
-        EditText etNumber = (EditText) convertView.findViewById(R.id.et_count);
-
 
         if (hoadon.getName() != null) {
-            tvName.setText(hoadon.getName());
-        } else tvName.setText("");
+            holder.tvName.setText(hoadon.getName());
+        } else holder.tvName.setText("");
 
         if (hoadon.getPrice() != null) {
-            tvPrice.setText(hoadon.getPrice());
-        } else tvPrice.setText("");
+            holder.tvPrice.setText(hoadon.getPrice());
+        } else holder.tvPrice.setText("");
 
-        holder.editText1.setText(Integer.toString(dshoadon.get(position).getNumber()));
-        holder.editText1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        holder.etCount.setText(Integer.toString(dshoadon.get(position).getNumber()));
+        //Them su kien de khi scroll thi edittext khong bi mat
+        holder.etCount.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onFocusChange(View view, boolean b) {
-                if (!b) {
-                    dshoadon.get(holder.ref).setNumber(Integer.parseInt(((EditText) view).getText().toString()));
-                }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
-        });
 
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                dshoadon.get(holder.ref).setNumber(Integer.parseInt(editable.toString()));
+            }
+        });
 
         return convertView;
     }
     private class ViewHolder {
-        TextView textView1;
-        EditText editText1;
+        TextView tvName;
+        EditText etCount;
+        TextView tvPrice;
         int ref;
     }
 }

@@ -26,6 +26,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import banhang.smartbill.Adapter.NavigationMenuAdapter;
+import banhang.smartbill.ChitiethoadonActivity;
 import banhang.smartbill.DAL.ProductAPI;
 import banhang.smartbill.DAL.TokenAPI;
 import banhang.smartbill.Entity.GrantTokenResult;
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 TokenAPI tokenApi = new TokenAPI();
-                String token = tokenApi.getToken();
+
                 ProductAPI productApi= new ProductAPI();
                 productApi.getProducts();
             }
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
             switch (i){
                 case MenuEntity.APPLICATION_INFO_ITEM :
                     break;
-                case MenuEntity.ORDER_LIST_ITEM:
+                case MenuEntity.ORDER_LIST_ITEM: fragment = new ChitiethoadonActivity();
                     break;
                 case MenuEntity.PRODUCT_LIST_ITEM:
                     break;
@@ -119,9 +120,15 @@ public class MainActivity extends AppCompatActivity {
             if (fragment != null) {
                 //replace fragment
                 FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
+
 
                 //close toggle menu
+                if(mDrawerLayout.isDrawerOpen(Gravity.RIGHT)){
+                    mDrawerLayout.closeDrawer(Gravity.RIGHT);
+                }else{
+                    mDrawerLayout.openDrawer(Gravity.RIGHT);
+                }
             } else {
                 Log.e("MainActivity", "Error in creating fragment");
             }
