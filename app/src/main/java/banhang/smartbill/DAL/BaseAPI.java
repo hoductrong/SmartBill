@@ -14,6 +14,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 
+import banhang.smartbill.Entity.UnauthorizedAccessException;
+
 /**
  * Created by KARATA on 28/11/2017.
  */
@@ -31,55 +33,58 @@ public class BaseAPI {
     }
 
     public HttpURLConnection getConnection() {
-        try{
-            return (HttpURLConnection)url.openConnection();
-        }catch (IOException ex) {
+        try {
+            return (HttpURLConnection) url.openConnection();
+        } catch (IOException ex) {
             return null;
         }
     }
 
-    public <TResult> TResult getResult(HttpURLConnection connection,Class<TResult> classResult) {
-        try{
+    public <TResult> TResult getResult(HttpURLConnection connection, Class<TResult> classResult)
+            throws UnauthorizedAccessException {
+        try {
             //receive result
             BufferedReader br = new BufferedReader(new InputStreamReader(
                     (connection.getInputStream())));
-           checkHttpStatusCode(connection.getResponseCode());
+            checkHttpStatusCode(connection.getResponseCode());
             Gson gson = new MyGsonBuilder().create();
-            return gson.fromJson(br,classResult);
-        }catch(IOException ex){
+            return gson.fromJson(br, classResult);
+        } catch (IOException ex) {
             return null;
         }
     }
 
-    public <TResult> TResult getResult(HttpURLConnection connection,Type resultType) {
-        try{
+    public <TResult> TResult getResult(HttpURLConnection connection, Type resultType)
+            throws UnauthorizedAccessException {
+        try {
             //receive result
             BufferedReader br = new BufferedReader(new InputStreamReader(
                     (connection.getInputStream())));
             checkHttpStatusCode(connection.getResponseCode());
             Gson gson = new MyGsonBuilder().create();
 
-            return gson.fromJson(br,resultType);
-        }catch(IOException ex){
+            return gson.fromJson(br, resultType);
+        } catch (IOException ex) {
             return null;
         }
     }
 
 
-    public <TResult> TResult getResult(HttpURLConnection connection,Object content, Type resultType) {
-        try{
+    public <TResult> TResult getResult(HttpURLConnection connection, Object content, Type resultType)
+            throws UnauthorizedAccessException {
+        try {
             Gson gson = new MyGsonBuilder().create();
 
             //send content to server
             byte[] byteContent;
-            if(!(content instanceof String)){
+            if (!(content instanceof String)) {
                 String sentContent = gson.toJson(content);
-                byteContent =  sentContent.getBytes();
-            }else{
+                byteContent = sentContent.getBytes();
+            } else {
                 byteContent = ((String) content).getBytes();
             }
 
-            OutputStream os =connection.getOutputStream();
+            OutputStream os = connection.getOutputStream();
             os.write(byteContent);
             os.close();
 
@@ -87,25 +92,26 @@ public class BaseAPI {
             BufferedReader br = new BufferedReader(new InputStreamReader(
                     (connection.getInputStream())));
             checkHttpStatusCode(connection.getResponseCode());
-            return gson.fromJson(br,resultType);
-        }catch(IOException ex){
+            return gson.fromJson(br, resultType);
+        } catch (IOException ex) {
             return null;
         }
     }
 
-    public <TResult> TResult getResult(HttpURLConnection connection,Object content, Class<TResult> resultClass) {
-        try{
+    public <TResult> TResult getResult(HttpURLConnection connection, Object content, Class<TResult> resultClass)
+            throws UnauthorizedAccessException {
+        try {
             Gson gson = new MyGsonBuilder().create();
             //send content to server
             byte[] byteContent;
-            if(!(content instanceof String)){
+            if (!(content instanceof String)) {
                 String sentContent = gson.toJson(content);
-                byteContent =  sentContent.getBytes();
-            }else{
+                byteContent = sentContent.getBytes();
+            } else {
                 byteContent = ((String) content).getBytes();
             }
 
-            OutputStream os =connection.getOutputStream();
+            OutputStream os = connection.getOutputStream();
             os.write(byteContent);
             os.close();
 
@@ -113,16 +119,16 @@ public class BaseAPI {
             BufferedReader br = new BufferedReader(new InputStreamReader(
                     (connection.getInputStream())));
             checkHttpStatusCode(connection.getResponseCode());
-            return gson.fromJson(br,resultClass);
-        }catch(IOException ex){
+            return gson.fromJson(br, resultClass);
+        } catch (IOException ex) {
             return null;
         }
     }
 
-    protected void checkHttpStatusCode(int httpStatusCode){
-        switch (httpStatusCode){
+    protected void checkHttpStatusCode(int httpStatusCode) throws UnauthorizedAccessException {
+        switch (httpStatusCode) {
             case HttpURLConnection.HTTP_UNAUTHORIZED:
-                break;
+                throw new UnauthorizedAccessException();
             case HttpURLConnection.HTTP_ACCEPTED:
                 break;
             case HttpURLConnection.HTTP_INTERNAL_ERROR:

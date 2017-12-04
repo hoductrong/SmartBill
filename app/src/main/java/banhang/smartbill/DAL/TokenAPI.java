@@ -6,6 +6,7 @@ import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 
 import banhang.smartbill.Entity.GrantTokenResult;
+import banhang.smartbill.Entity.UnauthorizedAccessException;
 
 /**
  * Created by KARATA on 28/11/2017.
@@ -14,7 +15,8 @@ import banhang.smartbill.Entity.GrantTokenResult;
 public class TokenAPI {
     public static String TOKEN = null;
 
-    public String getToken(String username, String password){
+    public String getToken(String username, String password)
+            throws UnauthorizedAccessException {
         BaseAPI tool = new BaseAPI("http://quanlibanhang.azurewebsites.net/api/token");
         HttpURLConnection conn = tool.getConnection();
         try{
