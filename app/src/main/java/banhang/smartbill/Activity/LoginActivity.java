@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import banhang.smartbill.DAL.TokenAPI;
+import banhang.smartbill.Entity.UnauthorizedAccessException;
 import banhang.smartbill.R;
 
 public class LoginActivity extends AppCompatActivity {
@@ -24,9 +25,6 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
         //Kiểm tra user đã đăng nhập chưa
         SharedPreferences prefs = getSharedPreferences(MYAPP,MODE_PRIVATE);
         String token = prefs.getString(TOKEN,null);
@@ -34,6 +32,9 @@ public class LoginActivity extends AppCompatActivity {
             TokenAPI.TOKEN = token;
             goToMainActivity();
         }
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+
         Button btn_sign_in = (Button)findViewById(R.id.btn_sign_in);
         edt_username = (EditText)findViewById(R.id.edt_username);
         edt_password = (EditText)findViewById(R.id.edt_password);
@@ -66,18 +67,23 @@ public class LoginActivity extends AppCompatActivity {
             Thread signInThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    TokenAPI tokenApi = new TokenAPI();
-                    tokenApi.getToken(edt_username.getText().toString(),edt_password.getText().toString());
-                    Message message;
-                    if(tokenApi.TOKEN != null){
-                        SharedPreferences.Editor editor = getSharedPreferences(MYAPP,MODE_PRIVATE).edit();
-                        editor.putString(TOKEN,TokenAPI.TOKEN);
-                        editor.apply();
-                        message = handler.obtainMessage(SignInStatus.SUCCESS);
-                    }else{
-                        message = handler.obtainMessage(SignInStatus.Fail);
+                    try{
+                        TokenAPI tokenApi = new TokenAPI();
+                        tokenApi.getToken(edt_username.getText().toString(),edt_password.getText().toString());
+                        Message message;
+                        if(tokenApi.TOKEN != null){
+                            SharedPreferences.Editor editor = getSharedPreferences(MYAPP,MODE_PRIVATE).edit();
+                            editor.putString(TOKEN,TokenAPI.TOKEN);
+                            editor.apply();
+                            message = handler.obtainMessage(SignInStatus.SUCCESS);
+                        }else{
+                            message = handler.obtainMessage(SignInStatus.Fail);
+                        }
+                        handler.sendMessage(message);
+                    }catch(UnauthorizedAccessException ex){
+                        //get token don't need authozire
                     }
-                    handler.sendMessage(message);
+
                 }
             });
             signInThread.start();

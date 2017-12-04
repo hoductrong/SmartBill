@@ -1,19 +1,25 @@
 package banhang.smartbill.DAL;
 
+import android.renderscript.ScriptGroup;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
+import banhang.smartbill.Entity.Order;
 import banhang.smartbill.Entity.UnauthorizedAccessException;
 
 /**
@@ -44,9 +50,9 @@ public class BaseAPI {
             throws UnauthorizedAccessException {
         try {
             //receive result
+            checkHttpStatusCode(connection.getResponseCode());
             BufferedReader br = new BufferedReader(new InputStreamReader(
                     (connection.getInputStream())));
-            checkHttpStatusCode(connection.getResponseCode());
             Gson gson = new MyGsonBuilder().create();
             return gson.fromJson(br, classResult);
         } catch (IOException ex) {
@@ -55,15 +61,15 @@ public class BaseAPI {
     }
 
     public <TResult> TResult getResult(HttpURLConnection connection, Type resultType)
-            throws UnauthorizedAccessException {
+             throws UnauthorizedAccessException{
         try {
             //receive result
-            BufferedReader br = new BufferedReader(new InputStreamReader(
-                    (connection.getInputStream())));
             checkHttpStatusCode(connection.getResponseCode());
+            InputStream inputStream = connection.getInputStream();
+            String resultData = readStream(inputStream);
             Gson gson = new MyGsonBuilder().create();
-
-            return gson.fromJson(br, resultType);
+            TResult data = gson.fromJson(resultData, resultType);
+            return data;
         } catch (IOException ex) {
             return null;
         }
@@ -89,9 +95,9 @@ public class BaseAPI {
             os.close();
 
             //receive result
+            checkHttpStatusCode(connection.getResponseCode());
             BufferedReader br = new BufferedReader(new InputStreamReader(
                     (connection.getInputStream())));
-            checkHttpStatusCode(connection.getResponseCode());
             return gson.fromJson(br, resultType);
         } catch (IOException ex) {
             return null;
@@ -116,9 +122,9 @@ public class BaseAPI {
             os.close();
 
             //receive result
+            checkHttpStatusCode(connection.getResponseCode());
             BufferedReader br = new BufferedReader(new InputStreamReader(
                     (connection.getInputStream())));
-            checkHttpStatusCode(connection.getResponseCode());
             return gson.fromJson(br, resultClass);
         } catch (IOException ex) {
             return null;
@@ -134,5 +140,18 @@ public class BaseAPI {
             case HttpURLConnection.HTTP_INTERNAL_ERROR:
                 break;
         }
+    }
+
+    private String readStream(InputStream stream) throws IOException{
+        StringBuilder stringBuilder = new StringBuilder();
+        String line = null;
+
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream))) {
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+        }
+
+        return stringBuilder.toString();
     }
 }

@@ -1,54 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:id="@+id/main_screen"
-    android:background="#FDF5E6"
-    android:layout_marginTop="10dp">
+    android:padding="5dp"
+    android:background="#FFF">
+
     <ImageView
         android:id="@+id/img_giohang"
-        android:layout_width="0dp"
+        android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/cart"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
         android:scaleType="fitXY"
-        android:layout_marginRight="20dp"
-        android:layout_weight="1"
-        android:padding="5dp"
-        />
+        android:src="@drawable/order_icon"/>
+
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
+        android:layout_toEndOf="@id/img_giohang"
+        android:layout_toStartOf="@+id/btn_remove"
+        android:padding="5dp"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:id="@+id/group_order_info"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Phi Dog"
-            android:id="@+id/txt_name"/>
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_customer_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Customer name" />
+
+            <TextView
+                android:id="@+id/tv_create_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="22/6/1996" />
+        </LinearLayout>
+
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:id="@+id/tv_status"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_weight="1"
-            android:text="22/6/1996"
-            android:id="@+id/txt_date"/>
+            android:text="Chưa thanh toán" />
     </LinearLayout>
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:text="Ế trầm trọng"
-        android:id="@+id/txt_status"/>
     <ImageButton
-        android:layout_width="0dp"
+        android:id="@+id/btn_remove"
+        android:layout_width="50dp"
         android:layout_height="50dp"
-        android:id="@+id/btn_edit"
-        android:src="@drawable/ic_delete"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:background="#FFF"
+        android:padding="10dp"
         android:scaleType="centerCrop"
-        android:layout_marginRight="20dp"
-        android:layout_weight="1"
-        android:background="#FDF5E6"
-        android:padding="20dp"
-        />
-</LinearLayout>
+        android:src="@drawable/close_icon" />
+</RelativeLayout>

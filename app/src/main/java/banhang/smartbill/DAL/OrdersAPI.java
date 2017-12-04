@@ -29,7 +29,6 @@ public class OrdersAPI {
                 conn.setRequestProperty("Authorization","Bearer " + TokenAPI.TOKEN);
 
             ArrayList<Order> orders = tool.getResult(conn,new TypeToken<ArrayList<Order>>(){}.getType());
-            System.out.println(orders);
             return orders;
         }catch(ProtocolException ex){
             return null;
