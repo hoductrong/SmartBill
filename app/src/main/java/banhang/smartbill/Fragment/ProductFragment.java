@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.SearchView;
+
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -59,7 +61,25 @@ public class ProductFragment extends Fragment {
     public void initVariable(){
         lvProduct = (ListView)mView.findViewById(R.id.lv_product);
 
-        //svSearch = (SearchView)mView.findViewById(R.id.sv_search);
+        svSearch = (SearchView)mView.findViewById(R.id.sv_search);
+        svSearch.setQueryHint("Search View");
+        svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText.toString());
+
+                adapter.notifyDataSetChanged();
+                return true;
+            }
+        });
+
         arrProduct = new ArrayList<Product>();
         adapter = new ProductAdapter(getActivity(),R.layout.product_listview_custom, arrProduct);
         lvProduct.setAdapter(adapter);

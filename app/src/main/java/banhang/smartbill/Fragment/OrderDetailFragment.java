@@ -23,7 +23,7 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import banhang.smartbill.Adapter.ChitiethoadonAdapter;
+import banhang.smartbill.Adapter.OrderDetailAdapter;
 import banhang.smartbill.ItemTest;
 import banhang.smartbill.R;
 
@@ -34,7 +34,7 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
     TextView customerName;
     ToggleButton cameraBtn;
     ArrayList<ItemTest> arrItemTest;
-    ChitiethoadonAdapter adapter=null;
+    OrderDetailAdapter adapter=null;
     ListView lvHoaDon=null;
     View mView;
     @Override
@@ -63,7 +63,7 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
         cameraBtn = (ToggleButton) mView.findViewById(R.id.tb_camera);
         lvHoaDon = (ListView)mView.findViewById(R.id.lv_item);
         arrItemTest = new ArrayList<ItemTest>();
-        adapter = new ChitiethoadonAdapter(getActivity(),R.layout.chitiethoadon_listview_custom, arrItemTest);
+        adapter = new OrderDetailAdapter(getActivity(),R.layout.chitiethoadon_listview_custom, arrItemTest);
         lvHoaDon.setAdapter(adapter);
 
         //Generate item de test

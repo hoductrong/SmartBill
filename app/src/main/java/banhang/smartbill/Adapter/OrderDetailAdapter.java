@@ -21,11 +21,11 @@ import banhang.smartbill.R;
  * Created by MyPC on 25/11/2017.
  */
 
-public class ChitiethoadonAdapter extends ArrayAdapter<ItemTest> {
+public class OrderDetailAdapter extends ArrayAdapter<ItemTest> {
     private Activity context;
     private List<ItemTest> dshoadon;
 
-    public ChitiethoadonAdapter(Activity context, int layoutID, List<ItemTest> objects) {
+    public OrderDetailAdapter(Activity context, int layoutID, List<ItemTest> objects) {
         super(context, layoutID, objects);
         this.context = context;
         this.dshoadon = objects;
