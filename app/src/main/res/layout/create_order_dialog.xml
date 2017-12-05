@@ -6,6 +6,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/btn_close"
         android:layoutDirection="rtl">
         <ImageView
             android:layout_width="50dp"
@@ -21,23 +22,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/txv_title"
-            android:layout_alignBaseline="@id/spn_customer_list"
+            android:layout_alignBaseline="@+id/tv_customer"
             android:text="Khách hàng"/>
         <AutoCompleteTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:tooltipText="Đinh Hồng Phi"
+            android:tooltipText="Customer"
             android:layout_marginStart="10dp"
-            android:id="@+id/spn_customer_list"
+            android:completionThreshold="1"
+            android:id="@+id/tv_customer"
             android:layout_toEndOf="@+id/txv_title"></AutoCompleteTextView>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/spn_customer_list"
-            android:layout_below="@+id/spn_customer_list"
-            android:layout_marginTop="10dp"
-            android:text="Tạo khách hàng mới"/>
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
@@ -45,6 +39,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/btn_create_order"
             android:text="Tạo hóa đơn"
             android:layout_centerHorizontal="true"/>
     </RelativeLayout>

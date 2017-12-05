@@ -1,10 +1,13 @@
 package banhang.smartbill.Fragment;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +25,7 @@ import banhang.smartbill.DAL.OrdersAPI;
 import banhang.smartbill.Entity.Order;
 import banhang.smartbill.Entity.UnauthorizedAccessException;
 import banhang.smartbill.R;
+import banhang.smartbill.Utility.CreateOrderDialog;
 
 /**
  * Created by KARATA on 04/12/2017.
@@ -30,6 +34,7 @@ import banhang.smartbill.R;
 public class OrderFragment extends Fragment {
     private OrdersAdapter orderAdapter;
     private List<Order> orderList;
+    private FloatingActionButton btn_ad_order;
 
     public OrderFragment(){
 
@@ -47,11 +52,40 @@ public class OrderFragment extends Fragment {
         super.onStart();
         //init adapter to show order list
         ListView listView = getView().findViewById(R.id.lv_orders);
+        btn_ad_order = getView().findViewById(R.id.add_order);
+
         orderList = new ArrayList<>();
         orderAdapter = new OrdersAdapter(getActivity(),R.layout.main_item,orderList);
         listView.setAdapter(orderAdapter);
+        btn_ad_order.setOnClickListener(gethandlerAddOrder());
+
         //connect to server to get order data
         getAndShowOrders();
+    }
+
+    private View.OnClickListener gethandlerAddOrder(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final CreateOrderDialog dialog = new CreateOrderDialog(getContext());
+                dialog.setContentView(R.layout.create_order_dialog);
+                dialog.setOnCloseButtonClickListener(new View.OnClickListener(){
+
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.setOnCreateOrderClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(getContext(),"Bãn đã tạo hóa đơn",Toast.LENGTH_LONG).show();
+                    }
+                });
+                dialog.show();
+            }
+        };
     }
 
     private void getAndShowOrders(){

@@ -27,7 +27,7 @@ public class CustomerAPI {
             if(TokenAPI.TOKEN != null)
                 conn.setRequestProperty("Authorization","Bearer " + TokenAPI.TOKEN);
 
-            ArrayList<Customer> customers = tool.getResult(conn,new TypeToken<ArrayList<Product>>(){}.getType());
+            ArrayList<Customer> customers = tool.getResult(conn,new TypeToken<ArrayList<Customer>>(){}.getType());
             System.out.println(customers);
             return customers;
         }catch(ProtocolException ex){
