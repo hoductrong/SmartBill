@@ -1,4 +1,4 @@
-package banhang.smartbill;
+package banhang.smartbill.Adapter;
 
 import android.app.Activity;
 import android.text.Editable;
@@ -13,6 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
+
+import banhang.smartbill.ItemTest;
+import banhang.smartbill.R;
 
 /**
  * Created by MyPC on 25/11/2017.

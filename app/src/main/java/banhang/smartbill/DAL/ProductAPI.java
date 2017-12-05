@@ -14,7 +14,7 @@ import banhang.smartbill.Entity.Product;
  */
 
 public class ProductAPI {
-    public List<Product> getProducts(){
+    public ArrayList<Product> getProducts(){
         BaseAPI tool = new BaseAPI("http://quanlibanhang.azurewebsites.net/api/products");
         HttpURLConnection conn = tool.getConnection();
         try{

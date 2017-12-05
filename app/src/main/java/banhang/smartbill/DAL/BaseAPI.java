@@ -52,6 +52,7 @@ public class BaseAPI {
     }
 
     public <TResult> TResult getResult(HttpURLConnection connection,Type resultType) {
+
         try{
             //receive result
             BufferedReader br = new BufferedReader(new InputStreamReader(

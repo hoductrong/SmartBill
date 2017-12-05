@@ -1,6 +1,5 @@
 package banhang.smartbill.Activity;
 
-import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -9,27 +8,14 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import banhang.smartbill.Adapter.NavigationMenuAdapter;
-import banhang.smartbill.ChitiethoadonActivity;
+import banhang.smartbill.DAL.OrdersAPI;
 import banhang.smartbill.DAL.ProductAPI;
 import banhang.smartbill.DAL.TokenAPI;
-import banhang.smartbill.Entity.GrantTokenResult;
 import banhang.smartbill.Entity.MenuEntity;
 import banhang.smartbill.R;
 
@@ -61,10 +47,10 @@ public class MainActivity extends AppCompatActivity {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                TokenAPI tokenApi = new TokenAPI();
-
-                ProductAPI productApi= new ProductAPI();
-                productApi.getProducts();
+                //TokenAPI tokenApi = new TokenAPI();
+                //tokenApi.getToken("dinhhongphi","phi123");
+                //OrdersAPI productApi= new OrdersAPI();
+                //productApi.getOrders();
             }
         });
         thread.start();
@@ -108,11 +94,11 @@ public class MainActivity extends AppCompatActivity {
             switch (i){
                 case MenuEntity.APPLICATION_INFO_ITEM :
                     break;
-                case MenuEntity.ORDER_LIST_ITEM: fragment = new ChitiethoadonActivity();
+                case MenuEntity.ORDER_LIST_ITEM : fragment = new ChitiethoadonActivity();
                     break;
-                case MenuEntity.PRODUCT_LIST_ITEM:
+                case MenuEntity.PRODUCT_LIST_ITEM : fragment = new ProductFragment();
                     break;
-                case MenuEntity.SIGNOUT_ITEM:
+                case MenuEntity.SIGNOUT_ITEM :
                     break;
                 default:
             }

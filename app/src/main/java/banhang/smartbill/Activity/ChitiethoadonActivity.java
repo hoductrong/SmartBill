@@ -1,9 +1,7 @@
-package banhang.smartbill;
+package banhang.smartbill.Activity;
 
-import android.support.v4.app.Fragment;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.app.Activity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.SparseArray;
@@ -24,6 +22,10 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import banhang.smartbill.Adapter.ChitiethoadonAdapter;
+import banhang.smartbill.ItemTest;
+import banhang.smartbill.R;
 
 public class ChitiethoadonActivity extends android.support.v4.app.Fragment {
     BarcodeDetector barcodeDetector;

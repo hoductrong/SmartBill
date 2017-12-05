@@ -44,6 +44,26 @@ public class ProductFragment extends Fragment {
         mView = inflater.inflate(R.layout.product_fragment, container, false);
         initVariable();
 
+        product = new ProductAPI();
+        runnableUI = new Runnable() {
+            @Override
+            public void run() {
+            adapter.notifyDataSetChanged();
+            }
+        };
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                TokenAPI tokenApi = new TokenAPI();
+                tokenApi.getToken("dinhhongphi","phi123");
+                arrProduct.clear();
+                arrProduct = product.getProducts();
+                handlerPost.post(runnableUI);
+
+            }
+        });
+        thread.start();
 
         // Inflate the layout for this fragment
         return mView;
@@ -55,27 +75,9 @@ public class ProductFragment extends Fragment {
 
         //svSearch = (SearchView)mView.findViewById(R.id.sv_search);
         arrProduct = new ArrayList<Product>();
-        product = new ProductAPI();
-        runnableUI = new Runnable() {
-            @Override
-            public void run() {
-                adapter = new ProductAdapter(getActivity(),R.layout.product_listview_custom, arrProduct);
-                lvProduct.setAdapter(adapter);
-            }
-        };
+        adapter = new ProductAdapter(getActivity(),R.layout.product_listview_custom, arrProduct);
+        lvProduct.setAdapter(adapter);
 
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                TokenAPI tokenApi = new TokenAPI();
-                tokenApi.getToken("dinhhongphi","phi123");
-
-                arrProduct = product.getProducts();
-                handlerPost.post(runnableUI);
-
-            }
-        });
-        thread.start();
 
     }
 
