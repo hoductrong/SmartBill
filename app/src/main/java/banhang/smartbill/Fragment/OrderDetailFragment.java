@@ -1,4 +1,4 @@
-package banhang.smartbill.Activity;
+package banhang.smartbill.Fragment;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -27,7 +27,7 @@ import banhang.smartbill.Adapter.ChitiethoadonAdapter;
 import banhang.smartbill.ItemTest;
 import banhang.smartbill.R;
 
-public class ChitiethoadonActivity extends android.support.v4.app.Fragment {
+public class OrderDetailFragment extends android.support.v4.app.Fragment {
     BarcodeDetector barcodeDetector;
     CameraSource cameraSource;
     SurfaceView cameraView;

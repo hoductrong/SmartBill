@@ -1,5 +1,8 @@
 package banhang.smartbill.Activity;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -13,10 +16,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import banhang.smartbill.Adapter.NavigationMenuAdapter;
-import banhang.smartbill.DAL.OrdersAPI;
-import banhang.smartbill.DAL.ProductAPI;
 import banhang.smartbill.DAL.TokenAPI;
 import banhang.smartbill.Entity.MenuEntity;
+import banhang.smartbill.Fragment.OrderFragment;
+import banhang.smartbill.Fragment.ProductFragment;
 import banhang.smartbill.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -43,17 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
         setupDrawerToggle();
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //TokenAPI tokenApi = new TokenAPI();
-                //tokenApi.getToken("dinhhongphi","phi123");
-                //OrdersAPI productApi= new OrdersAPI();
-                //productApi.getOrders();
-            }
-        });
-        thread.start();
     }
 
     void setupToolbar(){
@@ -94,11 +86,13 @@ public class MainActivity extends AppCompatActivity {
             switch (i){
                 case MenuEntity.APPLICATION_INFO_ITEM :
                     break;
-                case MenuEntity.ORDER_LIST_ITEM : fragment = new ChitiethoadonActivity();
+                case MenuEntity.ORDER_LIST_ITEM:
+                    fragment = new OrderFragment();
                     break;
                 case MenuEntity.PRODUCT_LIST_ITEM : fragment = new ProductFragment();
                     break;
-                case MenuEntity.SIGNOUT_ITEM :
+                case MenuEntity.SIGNOUT_ITEM:
+                    MainActivity.requireLogin(MainActivity.this);
                     break;
                 default:
             }
@@ -119,5 +113,18 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("MainActivity", "Error in creating fragment");
             }
         }
+    }
+
+    ///show login form to allow user authorization
+    public static void requireLogin(Context context){
+        //reset token
+        TokenAPI.TOKEN = null;
+        SharedPreferences.Editor editor = context.getSharedPreferences(LoginActivity.MYAPP,MODE_PRIVATE).edit();
+        editor.putString(LoginActivity.TOKEN,TokenAPI.TOKEN);
+        editor.apply();
+        //require new login
+        Intent intent = new Intent(context,LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(intent);
     }
 }

@@ -9,13 +9,15 @@ import java.util.List;
 
 import banhang.smartbill.Entity.Customer;
 import banhang.smartbill.Entity.Product;
+import banhang.smartbill.Entity.UnauthorizedAccessException;
 
 /**
  * Created by MyPC on 29/11/2017.
  */
 
 public class CustomerAPI {
-    public List<Customer> getCustomers(){
+    public List<Customer> getCustomers()
+            throws UnauthorizedAccessException {
         BaseAPI tool = new BaseAPI("http://quanlibanhang.azurewebsites.net/api/customers");
         HttpURLConnection conn = tool.getConnection();
         try{
@@ -32,7 +34,8 @@ public class CustomerAPI {
             return null;
         }
     }
-    public Customer getCustomer(String id){
+    public Customer getCustomer(String id)
+            throws UnauthorizedAccessException{
         BaseAPI tool = new BaseAPI("http://quanlibanhang.azurewebsites.net/api/customers/"+id);
         HttpURLConnection conn = tool.getConnection();
         try{

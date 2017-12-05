@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">smartbill</string>
     <string name="title_activity_chitiethoadon">ChitiethoadonActivity</string>
+    <string name="order_is_paid">Đã thanh toán</string>
+    <string name="order_not_paid">Hóa đơn chưa thanh toán</string>
+    <string name="unauthorize">Hệ thống cần được xác thực lại</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

@@ -11,13 +11,14 @@ import banhang.smartbill.Entity.Customer;
 import banhang.smartbill.Entity.Order;
 import banhang.smartbill.Entity.OrderProduct;
 import banhang.smartbill.Entity.Product;
+import banhang.smartbill.Entity.UnauthorizedAccessException;
 
 /**
  * Created by MyPC on 29/11/2017.
  */
 
 public class OrdersAPI {
-    public List<Order> getOrders(){
+    public List<Order> getOrders()throws UnauthorizedAccessException {
         BaseAPI tool = new BaseAPI("http://quanlibanhang.azurewebsites.net/api/orders");
         HttpURLConnection conn = tool.getConnection();
         try{
@@ -28,13 +29,13 @@ public class OrdersAPI {
                 conn.setRequestProperty("Authorization","Bearer " + TokenAPI.TOKEN);
 
             ArrayList<Order> orders = tool.getResult(conn,new TypeToken<ArrayList<Order>>(){}.getType());
-            System.out.println(orders);
             return orders;
         }catch(ProtocolException ex){
             return null;
         }
     }
-    public Order getOrder(String id){
+    public Order getOrder(String id)
+            throws UnauthorizedAccessException{
         BaseAPI tool = new BaseAPI("http://quanlibanhang.azurewebsites.net/api/orders/"+id);
         HttpURLConnection conn = tool.getConnection();
         try{
@@ -51,7 +52,8 @@ public class OrdersAPI {
             return null;
         }
     }
-    public Order postOrder(Order order){
+    public Order postOrder(Order order)
+            throws UnauthorizedAccessException{
         BaseAPI tool = new BaseAPI("http://quanlibanhang.azurewebsites.net/api/orders");
         HttpURLConnection conn = tool.getConnection();
         try{
@@ -68,7 +70,8 @@ public class OrdersAPI {
             return null;
         }
     }
-    public void deleteOrder(String id){
+    public void deleteOrder(String id)
+            throws UnauthorizedAccessException{
         BaseAPI tool = new BaseAPI("http://quanlibanhang.azurewebsites.net/api/orders/"+id);
         HttpURLConnection conn = tool.getConnection();
         try{
@@ -84,7 +87,8 @@ public class OrdersAPI {
             ex.printStackTrace();
         }
     }
-    public List<OrderProduct> putOrderProduct(String id, List<OrderProduct> products){
+    public List<OrderProduct> putOrderProduct(String id, List<OrderProduct> products)
+            throws UnauthorizedAccessException{
         BaseAPI tool = new BaseAPI("http://quanlibanhang.azurewebsites.net/api/orders/"+id+"/products");
         HttpURLConnection conn = tool.getConnection();
         try{
@@ -101,7 +105,8 @@ public class OrdersAPI {
             return null;
         }
     }
-    public List<Product> getOrderProduct(String id){
+    public List<Product> getOrderProduct(String id)
+            throws UnauthorizedAccessException{
         BaseAPI tool = new BaseAPI("http://quanlibanhang.azurewebsites.net/api/orders/"+id+"/products");
         HttpURLConnection conn = tool.getConnection();
         try{
@@ -118,7 +123,8 @@ public class OrdersAPI {
             return null;
         }
     }
-    public Order putOrder(Order order){
+    public Order putOrder(Order order)
+            throws UnauthorizedAccessException{
         BaseAPI tool = new BaseAPI("http://quanlibanhang.azurewebsites.net/api/orders/"+order.getId());
         HttpURLConnection conn = tool.getConnection();
         try{
