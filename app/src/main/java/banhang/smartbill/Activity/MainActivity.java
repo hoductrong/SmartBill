@@ -17,6 +17,7 @@ import android.widget.ListView;
 
 import banhang.smartbill.Adapter.NavigationMenuAdapter;
 import banhang.smartbill.DAL.TokenAPI;
+import banhang.smartbill.Entity.CurrentOrder;
 import banhang.smartbill.Entity.MenuEntity;
 import banhang.smartbill.Fragment.OrderFragment;
 import banhang.smartbill.Fragment.ProductFragment;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     Toolbar toolbar;
     android.support.v7.app.ActionBarDrawerToggle mDrawerToggle;
+    public static CurrentOrder CurrentOrder = null; //lưu trữ hóa đơn đang được xử lý
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,21 +99,23 @@ public class MainActivity extends AppCompatActivity {
                 default:
             }
 
-            if (fragment != null) {
-                //replace fragment
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
+            showFragment(fragment);
+        }
+    }
+    //show fragment
+    public void showFragment(Fragment fragment){
+        if (fragment != null) {
+            //replace fragment
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
 
 
-                //close toggle menu
-                if(mDrawerLayout.isDrawerOpen(Gravity.RIGHT)){
-                    mDrawerLayout.closeDrawer(Gravity.RIGHT);
-                }else{
-                    mDrawerLayout.openDrawer(Gravity.RIGHT);
-                }
-            } else {
-                Log.e("MainActivity", "Error in creating fragment");
+            //close toggle menu
+            if(mDrawerLayout.isDrawerOpen(Gravity.RIGHT)){
+                mDrawerLayout.closeDrawer(Gravity.RIGHT);
             }
+        } else {
+            Log.e("MainActivity", "Error in creating fragment");
         }
     }
 
