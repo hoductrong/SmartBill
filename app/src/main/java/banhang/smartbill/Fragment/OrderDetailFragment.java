@@ -59,6 +59,7 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
                 }
             }
         });
+        getBarcode();
         return  mView;
 
     }
@@ -93,7 +94,7 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
 
 
     }
-    public String getBarcode(){
+    private void getBarcode(){
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
             @Override
             public void release() {
@@ -110,7 +111,7 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
                 }
             }
         });
-        return codeDetected;
+        //return codeDetected;
     }
     public void startCamera(){
         try {
