@@ -168,8 +168,6 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
                         OrderProduct oProduct = new OrderProduct();
                         oProduct.setProduct(products);
                         oProduct.setProductId((products.getId()));
-                        oProduct.setOrder(MainActivity.CurrentOrder.getOrder());
-                        oProduct.setOrderId(MainActivity.CurrentOrder.getOrder().getId());
                         arrProduct.add(oProduct);
 
 

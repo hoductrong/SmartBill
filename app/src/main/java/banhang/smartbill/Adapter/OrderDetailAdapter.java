@@ -1,6 +1,7 @@
 package banhang.smartbill.Adapter;
 
 import android.app.Activity;
+import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -12,8 +13,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import banhang.smartbill.Activity.MainActivity;
 import banhang.smartbill.Entity.OrderProduct;
 import banhang.smartbill.Entity.Product;
 import banhang.smartbill.ItemTest;
@@ -33,6 +36,16 @@ public class OrderDetailAdapter extends ArrayAdapter<OrderProduct> {
         this.dshoadon = objects;
 
     }
+    @Override
+    public int getCount() {
+        return dshoadon.size();
+    }
+    @Nullable
+    @Override
+    public OrderProduct getItem(int position) {
+        OrderProduct product = dshoadon.get(position);
+        return product;
+    }
 
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
@@ -44,6 +57,7 @@ public class OrderDetailAdapter extends ArrayAdapter<OrderProduct> {
             holder.etCount = (EditText) convertView.findViewById(R.id.et_count);
             holder.tvName = (TextView) convertView.findViewById(R.id.tv_name);
             holder.tvPrice = (TextView) convertView.findViewById(R.id.tv_price);
+            holder.ibRemoveProduct = (ImageButton) convertView.findViewById(R.id.ib_remove_shopping_cart);
 
         }
         else holder = (ViewHolder) convertView.getTag();
@@ -79,6 +93,7 @@ public class OrderDetailAdapter extends ArrayAdapter<OrderProduct> {
             }
 
         });
+        holder.ibRemoveProduct.setOnClickListener(removeProduct(position));
 
         return convertView;
     }
@@ -86,7 +101,22 @@ public class OrderDetailAdapter extends ArrayAdapter<OrderProduct> {
         TextView tvName;
         EditText etCount;
         TextView tvPrice;
+        ImageButton ibRemoveProduct;
         int ref;
+    }
+    private View.OnClickListener removeProduct(final int row) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                OrderProduct o = getItem(row);
+                if( MainActivity.CurrentOrder.getOrderProducts()!=null) {
+                    dshoadon.remove(o);
+                    MainActivity.CurrentOrder.getOrderProducts().remove(o);
+                    notifyDataSetChanged();
+                }
+
+            }
+        };
     }
 }
 
