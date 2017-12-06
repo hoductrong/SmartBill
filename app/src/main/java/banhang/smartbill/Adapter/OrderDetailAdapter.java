@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import banhang.smartbill.Entity.OrderProduct;
+import banhang.smartbill.Entity.Product;
 import banhang.smartbill.ItemTest;
 import banhang.smartbill.R;
 
@@ -21,11 +23,11 @@ import banhang.smartbill.R;
  * Created by MyPC on 25/11/2017.
  */
 
-public class OrderDetailAdapter extends ArrayAdapter<ItemTest> {
+public class OrderDetailAdapter extends ArrayAdapter<OrderProduct> {
     private Activity context;
-    private List<ItemTest> dshoadon;
+    private List<OrderProduct> dshoadon;
 
-    public OrderDetailAdapter(Activity context, int layoutID, List<ItemTest> objects) {
+    public OrderDetailAdapter(Activity context, int layoutID, List<OrderProduct> objects) {
         super(context, layoutID, objects);
         this.context = context;
         this.dshoadon = objects;
@@ -45,18 +47,18 @@ public class OrderDetailAdapter extends ArrayAdapter<ItemTest> {
 
         }
         else holder = (ViewHolder) convertView.getTag();
-        final ItemTest hoadon = getItem(position);
+        final OrderProduct hoadon = getItem(position);
         holder.ref = position;
 
-        if (hoadon.getName() != null) {
-            holder.tvName.setText(hoadon.getName());
+        if (hoadon.getProduct().getName() != null) {
+            holder.tvName.setText(hoadon.getProduct().getName());
         } else holder.tvName.setText("");
 
-        if (hoadon.getPrice() != null) {
-            holder.tvPrice.setText(hoadon.getPrice());
+        if (Long.toString(hoadon.getProduct().getUnitPrice()) != null) {
+            holder.tvPrice.setText(Long.toString(hoadon.getProduct().getUnitPrice()));
         } else holder.tvPrice.setText("");
 
-        holder.etCount.setText(Integer.toString(dshoadon.get(position).getNumber()));
+        holder.etCount.setText(Float.toString(dshoadon.get(position).getAmount()));
         //Them su kien de khi scroll thi edittext khong bi mat
         holder.etCount.addTextChangedListener(new TextWatcher() {
             @Override
@@ -71,7 +73,7 @@ public class OrderDetailAdapter extends ArrayAdapter<ItemTest> {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                dshoadon.get(holder.ref).setNumber(Integer.parseInt(editable.toString()));
+                dshoadon.get(holder.ref).setAmount(Float.valueOf(editable.toString()));
             }
         });
 

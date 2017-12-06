@@ -50,4 +50,22 @@ public class ProductAPI {
             return null;
         }
     }
+    public Product getProductByCode(String code)
+            throws UnauthorizedAccessException{
+        BaseAPI tool = new BaseAPI("http://quanlibanhang.azurewebsites.net/api/products?productcode="+code);
+        HttpURLConnection conn = tool.getConnection();
+        try{
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Content-Type","application/json");
+            conn.setRequestProperty("Accept","application/json");
+            if(TokenAPI.TOKEN != null)
+                conn.setRequestProperty("Authorization","Bearer " + TokenAPI.TOKEN);
+
+            Product product = tool.getResult(conn,Product.class);
+            System.out.println(product);
+            return product;
+        }catch(ProtocolException ex){
+            return null;
+        }
+    }
 }

@@ -2,6 +2,8 @@ package banhang.smartbill.Fragment;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.SparseArray;
@@ -25,8 +27,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import banhang.smartbill.Activity.MainActivity;
 import banhang.smartbill.Adapter.OrderDetailAdapter;
+import banhang.smartbill.Adapter.ProductAdapter;
+import banhang.smartbill.DAL.ProductAPI;
+import banhang.smartbill.Entity.OrderProduct;
 import banhang.smartbill.Entity.Product;
+import banhang.smartbill.Entity.UnauthorizedAccessException;
 import banhang.smartbill.ItemTest;
 import banhang.smartbill.R;
 
@@ -36,10 +43,11 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
     SurfaceView cameraView;
     TextView customerName;
     ToggleButton cameraBtn;
-    ArrayList<ItemTest> arrItemTest;
+    List<OrderProduct> arrProduct;
     OrderDetailAdapter adapter=null;
     ListView lvHoaDon=null;
     String codeDetected;
+    Handler handler;
     View mView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,18 +75,10 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
         cameraView = (SurfaceView)mView.findViewById(R.id.sv_camera_view);
         cameraBtn = (ToggleButton) mView.findViewById(R.id.tb_camera);
         lvHoaDon = (ListView)mView.findViewById(R.id.lv_item);
-        arrItemTest = new ArrayList<ItemTest>();
-        adapter = new OrderDetailAdapter(getActivity(),R.layout.chitiethoadon_listview_custom, arrItemTest);
+        arrProduct = new ArrayList<OrderProduct>();
+        adapter = new OrderDetailAdapter(getActivity(),R.layout.chitiethoadon_listview_custom, arrProduct);
         lvHoaDon.setAdapter(adapter);
 
-        //Generate item de test
-        for(int i=0;i<11;i++){
-            String temp = "" ;
-            temp += Integer.toString(i*1000);
-            ItemTest hd = new ItemTest("Do an vat"+temp,"20000d",2+i);
-            arrItemTest.add(hd);
-            adapter.notifyDataSetChanged();
-        }
 
         barcodeDetector =
                 new BarcodeDetector.Builder(getActivity())
@@ -105,8 +105,7 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
 
                 if (barcodes.size() != 0) {
-
-                    Toast.makeText(getActivity(),barcodes.valueAt(0).displayValue,Toast.LENGTH_LONG);
+                    getAndShowProducts(barcodes.valueAt(0).displayValue);
 
                 }
             }
@@ -143,6 +142,47 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
                 cameraSource.stop();
             }
         });
+    }
+    private void getAndShowProducts(final String code){
+
+
+        Thread getProductThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    ProductAPI api = new ProductAPI();
+                    Product products = api.getProductByCode(code);
+                    Message message = handler.obtainMessage(1,products);
+                    handler.sendMessage(message);
+                }catch(UnauthorizedAccessException ex){
+                    Message message = handler.obtainMessage(2,"Unauthorize");
+                    handler.sendMessage(message);
+                }
+            }
+        });
+        getProductThread.start();
+        handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+
+                switch (msg.what){
+                    case 1:
+                        OrderProduct oProduct = new OrderProduct();
+                        oProduct.setProduct((Product)msg.obj);
+                        oProduct.setProductId(((Product) msg.obj).getId());
+                        //van con thieu them order
+                        arrProduct.add(oProduct);
+                        adapter.notifyDataSetChanged();
+                        break;
+                    case 2 : //error unauthorize
+                        Toast.makeText(getContext(),R.string.unauthorize,Toast.LENGTH_LONG).show();
+                        MainActivity.requireLogin(getContext());
+                        break;
+
+                }
+            }
+        };
     }
 
 }
