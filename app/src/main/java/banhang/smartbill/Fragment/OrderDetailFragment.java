@@ -42,7 +42,7 @@ import banhang.smartbill.Entity.UnauthorizedAccessException;
 import banhang.smartbill.ItemTest;
 import banhang.smartbill.R;
 
-public class OrderDetailFragment extends android.support.v4.app.Fragment {
+public class OrderDetailFragment extends android.support.v4.app.Fragment{
     BarcodeDetector barcodeDetector;
     CameraSource cameraSource;
     SurfaceView cameraView;
@@ -129,10 +129,17 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
 
         if(MainActivity.CurrentOrder.getOrderProducts()!=null) {
             arrProduct.addAll(MainActivity.CurrentOrder.getOrderProducts());
-            tvCurrentPrice.setText(Float.toString(getPrices(arrProduct))+"Đ");
         }
         adapter = new OrderDetailAdapter(getActivity(),R.layout.chitiethoadon_listview_custom, arrProduct);
+        //update price when list change
+        adapter.setOnUpdateSumPrice(new OrderDetailAdapter.OnUpdateSumPrice() {
+            @Override
+            public void UpdateSumPrice(float sumPrice) {
+                tvCurrentPrice.setText(Float.toString(sumPrice));
+            }
+        });
         lvHoaDon.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
         handlerPost = new Handler();
 
 
@@ -166,6 +173,7 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
                         Product products = api.getProductByCode(barcodes.valueAt(0).displayValue);
                         //them OrderProduct vao danh sach Product
                         OrderProduct oProduct = new OrderProduct();
+                        oProduct.setAmount(1);
                         oProduct.setProduct(products);
                         oProduct.setProductId((products.getId()));
                         arrProduct.add(oProduct);
@@ -175,7 +183,6 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
                         handlerPost.post(new Runnable() {
                             @Override
                             public void run() {
-                                tvCurrentPrice.setText(Float.toString(getPrices(MainActivity.CurrentOrder.getOrderProducts()))+"Đ");
                                 adapter.notifyDataSetChanged();
                             }
                         });
@@ -233,15 +240,7 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
             tvCustomerName.setText(MainActivity.CurrentOrder.getCustomer().getName());
         }
     }
-    public Float getPrices(List<OrderProduct> products){
-        Float temp = 0f;
-        if(products!=null) {
-            for (OrderProduct o : products) {
-                temp = o.getAmount() * o.getProduct().getUnitPrice();
-            }
-        }
-        return temp;
-    }
+
     public void postOrder(final Order order){
         final Handler handler = new Handler(){
             @Override
@@ -279,6 +278,4 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
         });
         postOrderThread.start();
     }
-
-
 }

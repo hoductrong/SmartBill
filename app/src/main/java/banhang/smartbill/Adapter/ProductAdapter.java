@@ -125,6 +125,7 @@ public class ProductAdapter extends ArrayAdapter<Product> implements Filterable 
                             ProductAdapter.this.notifyDataSetChanged();
                         } else {
                             OrderProduct op = new OrderProduct();
+                            op.setAmount(1);
                             op.setOrder(MainActivity.CurrentOrder.getOrder());
                             op.setOrderId(MainActivity.CurrentOrder.getOrder().getId());
                             op.setProduct(o);
@@ -143,19 +144,16 @@ public class ProductAdapter extends ArrayAdapter<Product> implements Filterable 
                 else {
                     List<OrderProduct> lo = new ArrayList<OrderProduct>();
                     OrderProduct op = new OrderProduct();
+                    op.setAmount(1);
                     op.setOrder(MainActivity.CurrentOrder.getOrder());
                     op.setOrderId(MainActivity.CurrentOrder.getOrder().getId());
                     op.setProduct(o);
                     op.setProductId(o.getId());
                     lo.add(op);
                     MainActivity.CurrentOrder.setOrderProducts(lo);
-
                     mList.remove(o);
                     ProductAdapter.this.notifyDataSetChanged();
                 }
-
-
-
             }
         };
     }

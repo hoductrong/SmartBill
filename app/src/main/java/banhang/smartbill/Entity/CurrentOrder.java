@@ -1,5 +1,6 @@
 package banhang.smartbill.Entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,6 +21,7 @@ public class CurrentOrder {
             Count++;
             this.order = order;
             this.customer = customer;
+            orderProducts = new ArrayList<>();
         }else{
             throw new IllegalArgumentException("parameter must have value not null");
         }
@@ -35,6 +37,17 @@ public class CurrentOrder {
 
     public List<OrderProduct> getOrderProducts() {
         return orderProducts;
+    }
+
+    //caculate sum money of order
+    public float getSumMoney(){
+        float sum = 0;
+        if(orderProducts != null && orderProducts.size() > 0){
+            for(OrderProduct op : orderProducts ){
+                sum += op.getAmount() * op.getProduct().getUnitPrice();
+            }
+        }
+        return sum;
     }
 
     public void setOrderProducts(List<OrderProduct> orderProducts) {

@@ -49,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
 
         setupDrawerToggle();
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        //start main fragment
+        showFragment(new OrderFragment());
     }
 
     void setupToolbar(){

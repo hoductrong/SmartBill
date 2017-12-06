@@ -29,7 +29,7 @@ import banhang.smartbill.R;
 public class OrderDetailAdapter extends ArrayAdapter<OrderProduct> {
     private Activity context;
     private List<OrderProduct> dshoadon;
-
+    private OnUpdateSumPrice onUpdateSumPrice; //update sum price of order when productorder change
     public OrderDetailAdapter(Activity context, int layoutID, List<OrderProduct> objects) {
         super(context, layoutID, objects);
         this.context = context;
@@ -53,11 +53,11 @@ public class OrderDetailAdapter extends ArrayAdapter<OrderProduct> {
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.chitiethoadon_listview_custom, null, false);
-            convertView.setTag(holder);
             holder.etCount = (EditText) convertView.findViewById(R.id.et_count);
             holder.tvName = (TextView) convertView.findViewById(R.id.tv_name);
             holder.tvPrice = (TextView) convertView.findViewById(R.id.tv_price);
             holder.ibRemoveProduct = (ImageButton) convertView.findViewById(R.id.ib_remove_shopping_cart);
+            convertView.setTag(holder);
 
         }
         else holder = (ViewHolder) convertView.getTag();
@@ -117,6 +117,23 @@ public class OrderDetailAdapter extends ArrayAdapter<OrderProduct> {
 
             }
         };
+    }
+
+    //callback update sum price on Fragment's view element
+    public void setOnUpdateSumPrice(OnUpdateSumPrice onUpdateSumPrice){
+        this.onUpdateSumPrice = onUpdateSumPrice;
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+        //update sum price of order
+        this.onUpdateSumPrice.UpdateSumPrice(MainActivity.CurrentOrder.getSumMoney());
+    }
+
+    ///this interface used to create callback to Fragment to update screen
+    public interface OnUpdateSumPrice{
+        void UpdateSumPrice(float sumPrice);
     }
 }
 
