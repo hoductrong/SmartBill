@@ -20,7 +20,9 @@ import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 import banhang.smartbill.Activity.MainActivity;
+import banhang.smartbill.DAL.CustomerAPI;
 import banhang.smartbill.DAL.OrdersAPI;
+import banhang.smartbill.Entity.Customer;
 import banhang.smartbill.Entity.Order;
 import banhang.smartbill.Entity.UnauthorizedAccessException;
 import banhang.smartbill.Fragment.OrderDetailFragment;
@@ -33,7 +35,6 @@ import banhang.smartbill.R;
 
 public class OrdersAdapter extends ArrayAdapter<Order> {
     private Activity context;
-
     public OrdersAdapter(Activity context, int layoutID, List<Order> objects) {
         super(context, layoutID, objects);
         this.context = context;
@@ -41,7 +42,7 @@ public class OrdersAdapter extends ArrayAdapter<Order> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+        final ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.main_item, null,
@@ -54,8 +55,10 @@ public class OrdersAdapter extends ArrayAdapter<Order> {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Order order = getItem(position);
-        //holder.tv_customer_name.setText(order.getCustomer().getName());
+        final Order order = getItem(position);
+
+        if(order.getCustomer() != null)
+            holder.tv_customer_name.setText(order.getCustomer().getName());
         //format datatime
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
         holder.tv_create_date.setText(format.format(order.getCreateDate()));

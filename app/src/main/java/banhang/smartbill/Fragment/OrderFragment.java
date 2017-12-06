@@ -27,6 +27,7 @@ import java.util.List;
 
 import banhang.smartbill.Activity.MainActivity;
 import banhang.smartbill.Adapter.OrdersAdapter;
+import banhang.smartbill.DAL.CustomerAPI;
 import banhang.smartbill.DAL.OrdersAPI;
 import banhang.smartbill.Entity.CurrentOrder;
 import banhang.smartbill.Entity.Customer;
@@ -66,10 +67,49 @@ public class OrderFragment extends Fragment {
         orderList = new ArrayList<>();
         orderAdapter = new OrdersAdapter(getActivity(),R.layout.main_item,orderList);
         listView.setAdapter(orderAdapter);
+        orderAdapter.notifyDataSetChanged();
         btn_ad_order.setOnClickListener(gethandlerAddOrder());
 
         //connect to server to get order data
         getAndShowOrders();
+    }
+
+    private void getCustomer(){
+        final android.os.Handler handler = new android.os.Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if(msg.what == 1){
+                    for(int i = 0; i < orderList.size(); i++){
+                        for(Customer c : (List<Customer>)msg.obj){
+                            if(c.getId().equals(orderList.get(i).getCustomerId())){
+                                orderList.get(i).setCustomer(c);
+                                break;
+                            }
+                        }
+                    }
+                    orderAdapter.notifyDataSetChanged();
+                }else{
+                    ((MainActivity)getContext()).requireLogin(getContext());
+                }
+            }
+        };
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    CustomerAPI api = new CustomerAPI();
+                    List<Customer> customers = api.getCustomers();
+                    Message message = handler.obtainMessage(1,customers);
+                    handler.sendMessage(message);
+                }catch(UnauthorizedAccessException ex){
+                    Message message = handler.obtainMessage(2);
+                    handler.sendMessage(message);
+                }
+            }
+        });
+        thread.start();
     }
 
     private View.OnClickListener gethandlerAddOrder(){
@@ -96,6 +136,7 @@ public class OrderFragment extends Fragment {
                             o.setCreateDate(Calendar.getInstance().getTime());
                             //get customer
                             Customer c = dialog.getSelectedCustomer();
+                            o.setCustomer(c);
                             MainActivity.CurrentOrder = new CurrentOrder(o,c);
                             //start order detail screen
                             OrderDetailFragment fragment = new OrderDetailFragment();
@@ -120,23 +161,24 @@ public class OrderFragment extends Fragment {
         };
     }
 
-    private void getAndShowOrders(){
-        final Handler handler = new Handler(){
+    private void getAndShowOrders() {
+        final Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
 
-                switch (msg.what){
+                switch (msg.what) {
                     case 1:
                         orderList.clear();
-                        orderList.addAll((ArrayList<Order>)msg.obj);
+                        orderList.addAll((ArrayList<Order>) msg.obj);
                         //add current order to list
-                        if(MainActivity.CurrentOrder != null)
-                            orderList.add(0,MainActivity.CurrentOrder.getOrder());
+                        if (MainActivity.CurrentOrder != null)
+                            orderList.add(0, MainActivity.CurrentOrder.getOrder());
+                        getCustomer();
                         orderAdapter.notifyDataSetChanged();
                         break;
-                    case 2 : //error unauthorize
-                        Toast.makeText(getContext(),R.string.unauthorize,Toast.LENGTH_LONG).show();
+                    case 2: //error unauthorize
+                        Toast.makeText(getContext(), R.string.unauthorize, Toast.LENGTH_LONG).show();
                         MainActivity.requireLogin(getContext());
                         break;
 
@@ -147,13 +189,13 @@ public class OrderFragment extends Fragment {
         Thread getOrderThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                try{
+                try {
                     OrdersAPI api = new OrdersAPI();
                     List<Order> orders = api.getOrders();
-                    Message message = handler.obtainMessage(1,orders);
+                    Message message = handler.obtainMessage(1, orders);
                     handler.sendMessage(message);
-                }catch(UnauthorizedAccessException ex){
-                    Message message = handler.obtainMessage(2,"Unauthorize");
+                } catch (UnauthorizedAccessException ex) {
+                    Message message = handler.obtainMessage(2, "Unauthorize");
                     handler.sendMessage(message);
                 }
             }

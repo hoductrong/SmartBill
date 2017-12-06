@@ -141,9 +141,8 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment{
                 .setAutoFocusEnabled(true)
                 .build();
         initSurfaceView();
-
-
     }
+
     private void getBarcode(){
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
             @Override
