@@ -1,10 +1,13 @@
 package banhang.smartbill.Fragment;
 
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -41,14 +44,17 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
     BarcodeDetector barcodeDetector;
     CameraSource cameraSource;
     SurfaceView cameraView;
-    TextView customerName;
+    TextView tvCustomerName,tvCurrentPrice;
     ToggleButton cameraBtn;
     List<OrderProduct> arrProduct;
     OrderDetailAdapter adapter=null;
+    FloatingActionButton fb_paid;
     ListView lvHoaDon=null;
     String codeDetected;
+    Handler handlerPost;
     Handler handler;
     View mView;
+    Runnable runnableUI;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +66,7 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     startCamera();
+
                     // The toggle is enabled
                 } else {
                     // The toggle is disabled
@@ -67,17 +74,57 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
                 }
             }
         });
+        checkOrderCreated();
         getBarcode();
+        fb_paid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                alertDialog.setTitle("Xác nhận hóa đơn");
+                alertDialog.setMessage("Xác nhận hoàn thành?");
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                        new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int which) {
+                                if(MainActivity.CurrentOrder.getOrderProducts()!=null) {
+                                    MainActivity.CurrentOrder.getOrderProducts().clear();
+                                    MainActivity.CurrentOrder.setOrderProducts(arrProduct);
+                                }
+                                else MainActivity.CurrentOrder.setOrderProducts(arrProduct);
+                                OrderFragment fragment = new OrderFragment();
+                                ((MainActivity)getActivity()).showFragment(fragment);
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
+                        new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int which) {
+                                alertDialog.dismiss();
+                            }
+                        });
+
+                alertDialog.show();
+
+            }
+        });
         return  mView;
 
     }
     private void initVariables(){
         cameraView = (SurfaceView)mView.findViewById(R.id.sv_camera_view);
         cameraBtn = (ToggleButton) mView.findViewById(R.id.tb_camera);
+        tvCurrentPrice = (TextView)mView.findViewById(R.id.tv_current_price);
+        tvCustomerName = (TextView)mView.findViewById(R.id.tv_current_customer_name);
         lvHoaDon = (ListView)mView.findViewById(R.id.lv_item);
+        fb_paid = (FloatingActionButton)mView.findViewById(R.id.fb_paid);
         arrProduct = new ArrayList<OrderProduct>();
+        if(MainActivity.CurrentOrder.getOrderProducts()!=null) {
+            arrProduct.addAll(MainActivity.CurrentOrder.getOrderProducts());
+        }
         adapter = new OrderDetailAdapter(getActivity(),R.layout.chitiethoadon_listview_custom, arrProduct);
         lvHoaDon.setAdapter(adapter);
+        handlerPost = new Handler();
 
 
         barcodeDetector =
@@ -105,12 +152,32 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
 
                 if (barcodes.size() != 0) {
-                    getAndShowProducts(barcodes.valueAt(0).displayValue);
+                    try{
+                        ProductAPI api = new ProductAPI();
+                        Product products = api.getProductByCode(barcodes.valueAt(0).displayValue);
+                        OrderProduct oProduct = new OrderProduct();
+                        oProduct.setProduct(products);
+                        oProduct.setProductId((products.getId()));
+                        oProduct.setOrder(MainActivity.CurrentOrder.getOrder());
+                        oProduct.setOrderId(MainActivity.CurrentOrder.getOrder().getId());
+                        arrProduct.add(oProduct);
+
+                        handlerPost.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
+
+                    }catch(UnauthorizedAccessException ex){
+                        MainActivity.requireLogin(getContext());
+
+                    }
+
 
                 }
             }
         });
-        //return codeDetected;
     }
     public void startCamera(){
         try {
@@ -130,6 +197,7 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
         cameraView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
+                System.out.println("Created");
 
             }
 
@@ -143,46 +211,14 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
             }
         });
     }
-    private void getAndShowProducts(final String code){
 
-
-        Thread getProductThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    ProductAPI api = new ProductAPI();
-                    Product products = api.getProductByCode(code);
-                    Message message = handler.obtainMessage(1,products);
-                    handler.sendMessage(message);
-                }catch(UnauthorizedAccessException ex){
-                    Message message = handler.obtainMessage(2,"Unauthorize");
-                    handler.sendMessage(message);
-                }
-            }
-        });
-        getProductThread.start();
-        handler = new Handler(){
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-
-                switch (msg.what){
-                    case 1:
-                        OrderProduct oProduct = new OrderProduct();
-                        oProduct.setProduct((Product)msg.obj);
-                        oProduct.setProductId(((Product) msg.obj).getId());
-                        //van con thieu them order
-                        arrProduct.add(oProduct);
-                        adapter.notifyDataSetChanged();
-                        break;
-                    case 2 : //error unauthorize
-                        Toast.makeText(getContext(),R.string.unauthorize,Toast.LENGTH_LONG).show();
-                        MainActivity.requireLogin(getContext());
-                        break;
-
-                }
-            }
-        };
+    public void checkOrderCreated(){
+        if(MainActivity.CurrentOrder == null){
+            Toast.makeText(getActivity(),"Hóa đơn chưa được tạo",Toast.LENGTH_LONG).show();
+            OrderFragment fragment = new OrderFragment();
+            ((MainActivity)getActivity()).showFragment(fragment);
+        }
     }
+
 
 }

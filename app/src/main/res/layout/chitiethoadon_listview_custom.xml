@@ -1,68 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:padding="@dimen/padding_base"
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:gravity="center_vertical">
 
-    <ImageView
-        android:layout_weight="2"
-        android:id="@+id/iv_shopping_cart"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_shopping_cart_black_24dp" />
-    <LinearLayout
-        android:id="@+id/ll1"
-        android:layout_width="0dp"
-        android:layout_height="50px"
-        android:layout_toRightOf="@+id/iv_shopping_cart"
-        android:layout_weight="3"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/tv_name"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="San pham 1"/>
-        <TextView
-            android:id="@+id/tv_price"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="20000d"/>
-    </LinearLayout>
-    <RelativeLayout
-        android:layout_weight="3"
-        android:id="@+id/rl1"
-        android:layout_width="0dp"
-        android:layout_height="50px"
-        android:layout_toRightOf="@+id/ll1"
-        >
 
-        <TextView
-            android:id="@+id/tv_count"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@+id/ib_remove_shopping_cart"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/ll1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:hint="So luong" />
+            android:layout_toLeftOf="@+id/rl1"
+            android:layout_alignParentTop="true">
 
-        <EditText
-            android:id="@+id/et_count"
-            android:layout_width="70px"
-            android:layout_height="70px"
-            android:layout_marginLeft="@dimen/margin_basex2"
-            android:layout_toRightOf="@+id/tv_count"
-            android:background="@android:color/transparent"
-            android:hint="2"/>
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="San pham 1" />
+
+            <TextView
+                android:id="@+id/tv_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_name"
+                android:hint="20000d" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_alignParentEnd="true">
+
+            <TextView
+                android:id="@+id/tv_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_centerVertical="true"
+                android:hint="Số lượng" />
+
+            <EditText
+                android:id="@+id/et_count"
+                android:layout_width="70px"
+                android:layout_height="70px"
+                android:layout_marginLeft="@dimen/margin_basex2"
+                android:layout_toRightOf="@+id/tv_count"
+                android:background="@android:color/transparent"
+                android:hint="0" />
+        </RelativeLayout>
     </RelativeLayout>
-
     <ImageButton
         android:layout_weight="2"
         android:id="@+id/ib_remove_shopping_cart"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:src="@drawable/ic_remove_shopping_cart_black_24dp"
         android:background="@color/white"/>
 
-</LinearLayout>
+</RelativeLayout>

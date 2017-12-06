@@ -12,23 +12,27 @@
         android:layout_width="match_parent"
         android:layout_height="0px">
         <TextView
-            android:id="@+id/tv_customer_name"
+            android:id="@+id/tv_current_customer_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:hint="Nguyen Van A"/>
+            android:textSize="50px"
+            android:hint="Customer Name"/>
         <TextView
             android:id="@+id/tv_current_price"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:textSize="50px"
             android:layout_alignParentEnd="true"
-            android:hint="750000d"/>
+            android:hint="0d"/>
     </RelativeLayout>
     <RelativeLayout
         android:layout_weight="5"
         android:layout_width="match_parent"
+        android:visibility="visible"
         android:layout_height="0px">
         <SurfaceView
             android:id="@+id/sv_camera_view"
+
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
@@ -46,8 +50,8 @@
         </ListView>
         <ToggleButton
             android:id="@+id/tb_camera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="150px"
+            android:layout_height="150px"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:background="@drawable/toggle_selector"
@@ -55,6 +59,16 @@
             android:textOff=""
             android:textOn=""
             />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fb_paid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="17dp"
+            android:layout_marginEnd="32dp"
+            android:src="@drawable/ic_continue" />
     </RelativeLayout>
 
 </LinearLayout>
