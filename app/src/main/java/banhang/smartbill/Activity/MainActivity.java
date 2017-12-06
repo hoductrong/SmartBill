@@ -111,9 +111,14 @@ public class MainActivity extends AppCompatActivity {
         if (fragment != null) {
             //replace fragment
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
-
-
+            if(fragment instanceof OrderFragment){
+                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).
+                        addToBackStack("main").commit();
+            }else{
+                fragmentManager.popBackStackImmediate("second",FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).
+                        addToBackStack("second").commit();
+            }
             //close toggle menu
             if(mDrawerLayout.isDrawerOpen(Gravity.RIGHT)){
                 mDrawerLayout.closeDrawer(Gravity.RIGHT);
@@ -134,5 +139,20 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(context,LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        int index = fragmentManager.getBackStackEntryCount() - 1;
+        //if this is OrderFragment then move main screen
+        if(index == 0){
+            Intent startMain = new Intent(Intent.ACTION_MAIN);
+            startMain.addCategory(Intent.CATEGORY_HOME);
+            startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(startMain);
+        }else{
+            super.onBackPressed();
+        }
     }
 }
