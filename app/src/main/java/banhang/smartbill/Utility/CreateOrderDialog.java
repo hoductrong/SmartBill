@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import banhang.smartbill.Activity.MainActivity;
+import banhang.smartbill.Adapter.CustomerListAdapter;
 import banhang.smartbill.DAL.CustomerAPI;
 import banhang.smartbill.Entity.Customer;
 import banhang.smartbill.Entity.UnauthorizedAccessException;

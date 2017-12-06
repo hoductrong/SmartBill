@@ -1,4 +1,4 @@
-package banhang.smartbill.Utility;
+package banhang.smartbill.Adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
