@@ -23,6 +23,7 @@ import banhang.smartbill.Activity.MainActivity;
 import banhang.smartbill.DAL.OrdersAPI;
 import banhang.smartbill.Entity.Order;
 import banhang.smartbill.Entity.UnauthorizedAccessException;
+import banhang.smartbill.Fragment.OrderDetailFragment;
 import banhang.smartbill.Hoadon;
 import banhang.smartbill.R;
 
@@ -68,12 +69,22 @@ public class OrdersAdapter extends ArrayAdapter<Order> {
                 && order.getId() == MainActivity.CurrentOrder.getOrder().getId())
         {
             holder.tv_status.setText(R.string.this_is_current_order);
+            convertView.setOnClickListener(getCurrentOrderViewClickedHandler());
         }
         //assign event to remove order
         ImageButton btn_remove = (ImageButton) convertView.findViewById(R.id.btn_remove);
         btn_remove.setOnClickListener(getRemoveOrderHandler(position));
 
         return convertView;
+    }
+
+    private View.OnClickListener getCurrentOrderViewClickedHandler(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity)getContext()).showFragment(new OrderDetailFragment());
+            }
+        };
     }
 
     ///handler remove order on view and server,
