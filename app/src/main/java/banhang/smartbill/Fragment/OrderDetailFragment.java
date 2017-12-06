@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.google.android.gms.vision.CameraSource;
@@ -22,8 +23,10 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import banhang.smartbill.Adapter.OrderDetailAdapter;
+import banhang.smartbill.Entity.Product;
 import banhang.smartbill.ItemTest;
 import banhang.smartbill.R;
 
@@ -36,6 +39,7 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
     ArrayList<ItemTest> arrItemTest;
     OrderDetailAdapter adapter=null;
     ListView lvHoaDon=null;
+    String codeDetected;
     View mView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,15 +86,14 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
 
         cameraSource = new CameraSource
                 .Builder(getActivity(), barcodeDetector)
-                .setRequestedPreviewSize(1280, 720)
+                .setRequestedPreviewSize(640, 480)
                 .setAutoFocusEnabled(true)
                 .build();
         initSurfaceView();
 
 
     }
-    public void getBarcode(){
-
+    public String getBarcode(){
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
             @Override
             public void release() {
@@ -100,17 +103,14 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
 
-                /*if (barcodes.size() != 0) {
-                    barcodeInfo.post(new Runnable() {    // Use the post method of the TextView
-                        public void run() {
-                            barcodeInfo.setText(    // Update the TextView
-                                    barcodes.valueAt(0).displayValue
-                            );
-                        }
-                    });
-                }*/
+                if (barcodes.size() != 0) {
+
+                    Toast.makeText(getActivity(),barcodes.valueAt(0).displayValue,Toast.LENGTH_LONG);
+
+                }
             }
         });
+        return codeDetected;
     }
     public void startCamera(){
         try {
