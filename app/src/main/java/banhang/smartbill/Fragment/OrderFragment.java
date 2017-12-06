@@ -28,6 +28,7 @@ import banhang.smartbill.Activity.MainActivity;
 import banhang.smartbill.Adapter.OrdersAdapter;
 import banhang.smartbill.DAL.OrdersAPI;
 import banhang.smartbill.Entity.CurrentOrder;
+import banhang.smartbill.Entity.Customer;
 import banhang.smartbill.Entity.Order;
 import banhang.smartbill.Entity.OverloadObjectException;
 import banhang.smartbill.Entity.UnauthorizedAccessException;
@@ -91,7 +92,9 @@ public class OrderFragment extends Fragment {
                             //create new order
                             Order o = new Order();
                             o.setCreateDate(Calendar.getInstance().getTime());
-                            MainActivity.CurrentOrder = new CurrentOrder(o);
+                            //get customer
+                            Customer c = dialog.getSelectedCustomer();
+                            MainActivity.CurrentOrder = new CurrentOrder(o,c);
                             //start order detail screen
                             OrderDetailFragment fragment = new OrderDetailFragment();
                             ((MainActivity)getActivity()).showFragment(fragment);
@@ -117,6 +120,9 @@ public class OrderFragment extends Fragment {
                     case 1:
                         orderList.clear();
                         orderList.addAll((ArrayList<Order>)msg.obj);
+                        //add current order to list
+                        if(MainActivity.CurrentOrder != null)
+                            orderList.add(0,MainActivity.CurrentOrder.get());
                         orderAdapter.notifyDataSetChanged();
                         break;
                     case 2 : //error unauthorize
