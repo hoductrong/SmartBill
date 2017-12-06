@@ -73,8 +73,11 @@ public class OrderDetailAdapter extends ArrayAdapter<OrderProduct> {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                dshoadon.get(holder.ref).setAmount(Float.valueOf(editable.toString()));
+                if(!editable.toString().isEmpty()) {
+                    dshoadon.get(holder.ref).setAmount(Float.valueOf(editable.toString()));
+                }
             }
+
         });
 
         return convertView;

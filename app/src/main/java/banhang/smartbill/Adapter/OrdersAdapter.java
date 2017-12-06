@@ -65,7 +65,7 @@ public class OrdersAdapter extends ArrayAdapter<Order> {
         }
         ///if current order
         if(position == 0 && MainActivity.CurrentOrder != null
-                && order.getId() == MainActivity.CurrentOrder.get().getId())
+                && order.getId() == MainActivity.CurrentOrder.getOrder().getId())
         {
             holder.tv_status.setText(R.string.this_is_current_order);
         }
@@ -85,7 +85,7 @@ public class OrdersAdapter extends ArrayAdapter<Order> {
                 Order o = getItem(row);
                 if (row == 0) {
                     if (MainActivity.CurrentOrder != null &&
-                            o.getId() == MainActivity.CurrentOrder.get().getId()) {
+                            o.getId() == MainActivity.CurrentOrder.getOrder().getId()) {
                         //this is current order
                         MainActivity.CurrentOrder = null;
                         //require garbage free memory

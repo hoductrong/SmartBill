@@ -33,7 +33,9 @@ import java.util.List;
 import banhang.smartbill.Activity.MainActivity;
 import banhang.smartbill.Adapter.OrderDetailAdapter;
 import banhang.smartbill.Adapter.ProductAdapter;
+import banhang.smartbill.DAL.OrdersAPI;
 import banhang.smartbill.DAL.ProductAPI;
+import banhang.smartbill.Entity.Order;
 import banhang.smartbill.Entity.OrderProduct;
 import banhang.smartbill.Entity.Product;
 import banhang.smartbill.Entity.UnauthorizedAccessException;
@@ -92,8 +94,13 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
                                     MainActivity.CurrentOrder.setOrderProducts(arrProduct);
                                 }
                                 else MainActivity.CurrentOrder.setOrderProducts(arrProduct);
-                                OrderFragment fragment = new OrderFragment();
-                                ((MainActivity)getActivity()).showFragment(fragment);
+                                //Post Order len server
+                                Order order = new Order();
+                                order.setCustomerId(MainActivity.CurrentOrder.getCustomer().getId());
+                                order.setCustomer(MainActivity.CurrentOrder.getCustomer());
+                                order.setOrderProduct(arrProduct);
+                                postOrder(order);
+
                             }
                         });
                 alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
@@ -119,8 +126,10 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
         lvHoaDon = (ListView)mView.findViewById(R.id.lv_item);
         fb_paid = (FloatingActionButton)mView.findViewById(R.id.fb_paid);
         arrProduct = new ArrayList<OrderProduct>();
+
         if(MainActivity.CurrentOrder.getOrderProducts()!=null) {
             arrProduct.addAll(MainActivity.CurrentOrder.getOrderProducts());
+            tvCurrentPrice.setText(Float.toString(getPrices(arrProduct))+"Đ");
         }
         adapter = new OrderDetailAdapter(getActivity(),R.layout.chitiethoadon_listview_custom, arrProduct);
         lvHoaDon.setAdapter(adapter);
@@ -155,6 +164,7 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
                     try{
                         ProductAPI api = new ProductAPI();
                         Product products = api.getProductByCode(barcodes.valueAt(0).displayValue);
+                        //them OrderProduct vao danh sach Product
                         OrderProduct oProduct = new OrderProduct();
                         oProduct.setProduct(products);
                         oProduct.setProductId((products.getId()));
@@ -162,9 +172,12 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
                         oProduct.setOrderId(MainActivity.CurrentOrder.getOrder().getId());
                         arrProduct.add(oProduct);
 
+
+
                         handlerPost.post(new Runnable() {
                             @Override
                             public void run() {
+                                tvCurrentPrice.setText(Float.toString(getPrices(MainActivity.CurrentOrder.getOrderProducts()))+"Đ");
                                 adapter.notifyDataSetChanged();
                             }
                         });
@@ -218,6 +231,55 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment {
             OrderFragment fragment = new OrderFragment();
             ((MainActivity)getActivity()).showFragment(fragment);
         }
+        else {
+            tvCustomerName.setText(MainActivity.CurrentOrder.getCustomer().getName());
+        }
+    }
+    public Float getPrices(List<OrderProduct> products){
+        Float temp = 0f;
+        if(products!=null) {
+            for (OrderProduct o : products) {
+                temp = o.getAmount() * o.getProduct().getUnitPrice();
+            }
+        }
+        return temp;
+    }
+    public void postOrder(final Order order){
+        final Handler handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+
+                switch (msg.what){
+                    case 1: Toast.makeText(getContext(),"Tạo hóa đơn thành công",Toast.LENGTH_LONG).show();
+                            MainActivity.CurrentOrder=null;
+                            OrderFragment fragment = new OrderFragment();
+                            ((MainActivity)getActivity()).showFragment(fragment);
+
+                    case 2 : //error unauthorize
+                        Toast.makeText(getContext(),R.string.unauthorize,Toast.LENGTH_LONG).show();
+                        MainActivity.requireLogin(getContext());
+                        break;
+
+                }
+            }
+        };
+        Thread postOrderThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    OrdersAPI api = new OrdersAPI();
+                    Order orders = api.postOrder(order);
+                    Message message = handler.obtainMessage(1,orders);
+                    handler.sendMessage(message);
+
+                }catch(UnauthorizedAccessException ex){
+                    Message message = handler.obtainMessage(2,"Unauthorize");
+                    handler.sendMessage(message);
+                }
+            }
+        });
+        postOrderThread.start();
     }
 
 

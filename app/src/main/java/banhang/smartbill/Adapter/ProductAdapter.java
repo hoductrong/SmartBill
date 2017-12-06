@@ -9,13 +9,17 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import banhang.smartbill.Activity.MainActivity;
 import banhang.smartbill.Entity.Customer;
+import banhang.smartbill.Entity.Order;
+import banhang.smartbill.Entity.OrderProduct;
 import banhang.smartbill.Entity.Product;
 import banhang.smartbill.R;
 
@@ -99,13 +103,66 @@ public class ProductAdapter extends ArrayAdapter<Product> implements Filterable 
         }
 
         TextView tvProductName = convertView.findViewById(R.id.tv_product_name);
-        ImageView ivShoppingcart = convertView.findViewById(R.id.iv_shopping_cart_product);
+        ImageButton ibAddProduct = convertView.findViewById(R.id.ib_add_product);
+
 
 
         if (getItem(position).getName() != null) {
             tvProductName.setText(getItem(position).getName());
         } else tvProductName.setText("");
-
+        ibAddProduct.setOnClickListener(addProductToOrder(position));
         return convertView;
+    }
+    private View.OnClickListener addProductToOrder(final int row) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Product o = getItem(row);
+                if( MainActivity.CurrentOrder.getOrderProducts()!=null) {
+
+                        if (checkContain(o,MainActivity.CurrentOrder.getOrderProducts()) ) {
+                            mList.remove(o);
+                            ProductAdapter.this.notifyDataSetChanged();
+                        } else {
+                            OrderProduct op = new OrderProduct();
+                            op.setOrder(MainActivity.CurrentOrder.getOrder());
+                            op.setOrderId(MainActivity.CurrentOrder.getOrder().getId());
+                            op.setProduct(o);
+                            op.setProductId(o.getId());
+                            List<OrderProduct> lo = new ArrayList<OrderProduct>();
+                            lo.addAll(MainActivity.CurrentOrder.getOrderProducts());
+                            lo.add(op);
+                            MainActivity.CurrentOrder.setOrderProducts(lo);
+
+                            mList.remove(o);
+                            ProductAdapter.this.notifyDataSetChanged();
+                        }
+
+
+                }
+                else {
+                    List<OrderProduct> lo = new ArrayList<OrderProduct>();
+                    OrderProduct op = new OrderProduct();
+                    op.setOrder(MainActivity.CurrentOrder.getOrder());
+                    op.setOrderId(MainActivity.CurrentOrder.getOrder().getId());
+                    op.setProduct(o);
+                    op.setProductId(o.getId());
+                    lo.add(op);
+                    MainActivity.CurrentOrder.setOrderProducts(lo);
+
+                    mList.remove(o);
+                    ProductAdapter.this.notifyDataSetChanged();
+                }
+
+
+
+            }
+        };
+    }
+    public boolean checkContain(Product o,List<OrderProduct> op){
+        for( OrderProduct temp : op){
+            if(temp.getProductId().equals(o.getId()))return true;
+        }
+        return false;
     }
 }

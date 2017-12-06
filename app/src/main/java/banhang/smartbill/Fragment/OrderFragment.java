@@ -122,7 +122,7 @@ public class OrderFragment extends Fragment {
                         orderList.addAll((ArrayList<Order>)msg.obj);
                         //add current order to list
                         if(MainActivity.CurrentOrder != null)
-                            orderList.add(0,MainActivity.CurrentOrder.get());
+                            orderList.add(0,MainActivity.CurrentOrder.getOrder());
                         orderAdapter.notifyDataSetChanged();
                         break;
                     case 2 : //error unauthorize

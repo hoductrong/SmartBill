@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import android.widget.Toast;
@@ -60,9 +61,10 @@ public class ProductFragment extends Fragment {
 
     public void initVariable(){
         lvProduct = (ListView)mView.findViewById(R.id.lv_product);
-
         svSearch = (SearchView)mView.findViewById(R.id.sv_search);
-        svSearch.setQueryHint("Search View");
+        svSearch.setQueryHint("Search");
+        checkOrderCreated();
+
         svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
@@ -77,6 +79,7 @@ public class ProductFragment extends Fragment {
                 return true;
             }
         });
+
 
         arrProduct = new ArrayList<Product>();
 
@@ -121,6 +124,14 @@ public class ProductFragment extends Fragment {
             }
         });
         getProductThread.start();
+    }
+    public void checkOrderCreated(){
+        if(MainActivity.CurrentOrder == null){
+            Toast.makeText(getActivity(),"Hóa đơn chưa được tạo",Toast.LENGTH_LONG).show();
+            OrderFragment fragment = new OrderFragment();
+            ((MainActivity)getActivity()).showFragment(fragment);
+        }
+
     }
 
 }
