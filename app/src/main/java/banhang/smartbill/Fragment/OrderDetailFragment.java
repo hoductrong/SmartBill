@@ -48,7 +48,6 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment{
     SurfaceView cameraView;
     TextView tvCustomerName,tvCurrentPrice;
     ToggleButton cameraBtn;
-    List<OrderProduct> arrProduct;
     OrderDetailAdapter adapter=null;
     FloatingActionButton fb_paid;
     ListView lvHoaDon=null;
@@ -74,7 +73,7 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment{
                 }
             }
         });
-        checkOrderCreated();
+
         getBarcode();
         fb_paid.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,11 +86,6 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment{
                         new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog, int which) {
-                                if(MainActivity.CurrentOrder.getOrderProducts()!=null) {
-                                    MainActivity.CurrentOrder.getOrderProducts().clear();
-                                    MainActivity.CurrentOrder.setOrderProducts(arrProduct);
-                                }
-                                else MainActivity.CurrentOrder.setOrderProducts(arrProduct);
                                 //Post Order len server
                                 Order order = new Order();
                                 order.setCustomerId(MainActivity.CurrentOrder.getCustomer().getId());
@@ -122,12 +116,8 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment{
         tvCustomerName = (TextView)mView.findViewById(R.id.tv_current_customer_name);
         lvHoaDon = (ListView)mView.findViewById(R.id.lv_item);
         fb_paid = (FloatingActionButton)mView.findViewById(R.id.fb_paid);
-        arrProduct = new ArrayList<OrderProduct>();
-
-        if(MainActivity.CurrentOrder.getOrderProducts()!=null) {
-            arrProduct.addAll(MainActivity.CurrentOrder.getOrderProducts());
-        }
-        adapter = new OrderDetailAdapter(getActivity(),R.layout.chitiethoadon_listview_custom, arrProduct);
+        checkOrderCreated();
+        adapter = new OrderDetailAdapter(getActivity(),R.layout.chitiethoadon_listview_custom, MainActivity.CurrentOrder.getOrderProducts());
         //update price when list change
         adapter.setOnUpdateSumPrice(new OrderDetailAdapter.OnUpdateSumPrice() {
             @Override
@@ -173,7 +163,7 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment{
                         oProduct.setAmount(1);
                         oProduct.setProduct(products);
                         oProduct.setProductId((products.getId()));
-                        arrProduct.add(oProduct);
+                        MainActivity.CurrentOrder.getOrderProducts().add(oProduct);
 
 
 
@@ -319,4 +309,5 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment{
         });
         postOrderThread.start();
     }
+
 }
