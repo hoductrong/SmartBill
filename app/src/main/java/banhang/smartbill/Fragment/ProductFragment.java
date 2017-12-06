@@ -74,15 +74,12 @@ public class ProductFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 adapter.getFilter().filter(newText.toString());
-
-                adapter.notifyDataSetChanged();
                 return true;
             }
         });
 
         arrProduct = new ArrayList<Product>();
-        adapter = new ProductAdapter(getActivity(),R.layout.product_listview_custom, arrProduct);
-        lvProduct.setAdapter(adapter);
+
 
 
     }
@@ -96,6 +93,8 @@ public class ProductFragment extends Fragment {
                     case 1:
                         arrProduct.clear();
                         arrProduct.addAll((ArrayList<Product>)msg.obj);
+                        adapter = new ProductAdapter(getActivity(),R.layout.product_listview_custom, arrProduct);
+                        lvProduct.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
                         break;
                     case 2 : //error unauthorize

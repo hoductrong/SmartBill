@@ -1,6 +1,7 @@
 package banhang.smartbill.Adapter;
 
 import android.app.Activity;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import banhang.smartbill.Entity.Customer;
 import banhang.smartbill.Entity.Product;
 import banhang.smartbill.R;
 
@@ -27,9 +29,18 @@ public class ProductAdapter extends ArrayAdapter<Product> implements Filterable 
     public ProductAdapter(Activity context, int layoutID, List<Product> objects) {
         super(context, layoutID, objects);
         this.context = context;
-        this.listProducts = objects;
-        this.mList = objects;
-
+        listProducts = objects;
+        mList = new ArrayList<>(objects);
+    }
+    @Override
+    public int getCount() {
+        return mList.size();
+    }
+    @Nullable
+    @Override
+    public Product getItem(int position) {
+        Product product = mList.get(position);
+        return product;
     }
     @Override
     public Filter getFilter() {
@@ -63,7 +74,6 @@ public class ProductAdapter extends ArrayAdapter<Product> implements Filterable 
                             filteredProducts.add(c);
                         }
                     }
-
                     // Finally set the filtered values and size/count
                     results.values = filteredProducts;
                     results.count = filteredProducts.size();
@@ -75,8 +85,9 @@ public class ProductAdapter extends ArrayAdapter<Product> implements Filterable 
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                mList = (ArrayList<Product>) results.values;
-                //notifyDataSetChanged();
+                mList.clear();
+                mList.addAll( (ArrayList<Product>) results.values);
+                notifyDataSetChanged();
             }
         };
     }
@@ -87,19 +98,14 @@ public class ProductAdapter extends ArrayAdapter<Product> implements Filterable 
             convertView = LayoutInflater.from(context).inflate(R.layout.product_listview_custom, null, false);
         }
 
-        final Product product = getItem(position);
-
         TextView tvProductName = convertView.findViewById(R.id.tv_product_name);
         ImageView ivShoppingcart = convertView.findViewById(R.id.iv_shopping_cart_product);
 
 
-        if (product.getName() != null) {
-            tvProductName.setText(product.getName());
+        if (getItem(position).getName() != null) {
+            tvProductName.setText(getItem(position).getName());
         } else tvProductName.setText("");
 
         return convertView;
-    }
-    public List<Product> getListProducts(){
-        return mList;
     }
 }

@@ -19,6 +19,7 @@ import banhang.smartbill.Adapter.NavigationMenuAdapter;
 import banhang.smartbill.DAL.TokenAPI;
 import banhang.smartbill.Entity.CurrentOrder;
 import banhang.smartbill.Entity.MenuEntity;
+import banhang.smartbill.Fragment.OrderDetailFragment;
 import banhang.smartbill.Fragment.OrderFragment;
 import banhang.smartbill.Fragment.ProductFragment;
 import banhang.smartbill.R;
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             Fragment fragment = null;
             switch (i){
-                case MenuEntity.APPLICATION_INFO_ITEM :
+                case MenuEntity.APPLICATION_INFO_ITEM : fragment = new OrderDetailFragment();
                     break;
                 case MenuEntity.ORDER_LIST_ITEM:
                     fragment = new OrderFragment();
