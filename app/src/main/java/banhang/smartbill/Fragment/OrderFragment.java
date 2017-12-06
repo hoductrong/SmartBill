@@ -16,13 +16,20 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import banhang.smartbill.Activity.MainActivity;
 import banhang.smartbill.Adapter.OrdersAdapter;
 import banhang.smartbill.DAL.OrdersAPI;
+import banhang.smartbill.Entity.CurrentOrder;
 import banhang.smartbill.Entity.Order;
+import banhang.smartbill.Entity.OverloadObjectException;
 import banhang.smartbill.Entity.UnauthorizedAccessException;
 import banhang.smartbill.R;
 import banhang.smartbill.Utility.CreateOrderDialog;
@@ -80,7 +87,19 @@ public class OrderFragment extends Fragment {
                 dialog.setOnCreateOrderClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(getContext(),"Bãn đã tạo hóa đơn",Toast.LENGTH_LONG).show();
+                        try{
+                            //create new order
+                            Order o = new Order();
+                            o.setCreateDate(Calendar.getInstance().getTime());
+                            MainActivity.CurrentOrder = new CurrentOrder(o);
+                            //start order detail screen
+                            OrderDetailFragment fragment = new OrderDetailFragment();
+                            ((MainActivity)getActivity()).showFragment(fragment);
+                            dialog.dismiss();
+                        }catch(OverloadObjectException ex){
+                            dialog.dismiss();
+                            Toast.makeText(getContext(),"Lỗi. Bạn phải xử lý hết các hóa đơn đã tạo",Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
                 dialog.show();

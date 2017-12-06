@@ -106,4 +106,14 @@ public class CustomerListAdapter extends ArrayAdapter<Customer> {
         tv_customer_name.setText(getItem(position).getName());
         return convertView;
     }
+
+    //find customer by name
+    public Customer contain(String customerName){
+        for(Customer c : customerList){
+            if(c.getName().toLowerCase().equals(customerName.toLowerCase())){
+                return c;
+            }
+        }
+        return null;
+    }
 }

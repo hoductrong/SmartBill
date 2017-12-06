@@ -41,6 +41,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/btn_create_order"
             android:text="Tạo hóa đơn"
+            android:enabled="false"
             android:layout_centerHorizontal="true"/>
     </RelativeLayout>
 </LinearLayout>
