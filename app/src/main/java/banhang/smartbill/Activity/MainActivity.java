@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import banhang.smartbill.Adapter.NavigationMenuAdapter;
 import banhang.smartbill.DAL.TokenAPI;
@@ -90,12 +91,16 @@ public class MainActivity extends AppCompatActivity {
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             Fragment fragment = null;
             switch (i){
-                case MenuEntity.APPLICATION_INFO_ITEM : fragment = new OrderDetailFragment();
+                case MenuEntity.APPLICATION_INFO_ITEM :
                     break;
                 case MenuEntity.ORDER_LIST_ITEM:
                     fragment = new OrderFragment();
                     break;
-                case MenuEntity.PRODUCT_LIST_ITEM : fragment = new ProductFragment();
+                case MenuEntity.PRODUCT_LIST_ITEM :
+                    if(CurrentOrder != null)
+                        fragment = new ProductFragment();
+                    else
+                        Toast.makeText(MainActivity.this,"Phải tạo hóa đơn trước",Toast.LENGTH_LONG).show();
                     break;
                 case MenuEntity.SIGNOUT_ITEM:
                     MainActivity.requireLogin(MainActivity.this);

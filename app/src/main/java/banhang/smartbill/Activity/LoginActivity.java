@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -22,6 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     public static final String TOKEN = "TOKEN";
     EditText edt_username;
     EditText edt_password;
+    Button btn_sign_in;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +38,13 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Button btn_sign_in = (Button)findViewById(R.id.btn_sign_in);
+        btn_sign_in = (Button)findViewById(R.id.btn_sign_in);
         edt_username = (EditText)findViewById(R.id.edt_username);
         edt_password = (EditText)findViewById(R.id.edt_password);
         btn_sign_in.setOnClickListener(new signInClick());
+
+        edt_password.addTextChangedListener(getValidateInput());
+        edt_username.addTextChangedListener(getValidateInput());
 
     }
 
@@ -46,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
     private class signInClick implements View.OnClickListener{
         @Override
         public void onClick(View view) {
+            btn_sign_in.setEnabled(false);
             final Handler handler = new Handler(){
                 @Override
                 public void handleMessage(Message msg) {
@@ -56,6 +63,7 @@ public class LoginActivity extends AppCompatActivity {
                             goToMainActivity();
                             break;
                         case SignInStatus.Fail:
+                            btn_sign_in.setEnabled(true);
                             Toast.makeText(LoginActivity.this,"Đăng nhập thất bại. Vui lòng thử lại",
                                     Toast.LENGTH_LONG).show();
                             break;
@@ -98,6 +106,27 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private TextWatcher getValidateInput(){
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(edt_password.getText().length() == 0 || edt_username.getText().length() == 0)
+                    btn_sign_in.setEnabled(false);
+                else
+                    btn_sign_in.setEnabled(true);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        };
+    }
 
 
     //

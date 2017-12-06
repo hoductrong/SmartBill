@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,28 +75,30 @@ public class OrderDetailAdapter extends ArrayAdapter<OrderProduct> {
         } else holder.tvPrice.setText("");
 
         holder.etCount.setText(Float.toString(dshoadon.get(position).getAmount()));
-        //Them su kien de khi scroll thi edittext khong bi mat
-        holder.etCount.addTextChangedListener(new TextWatcher() {
+
+        holder.etCount.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if(!editable.toString().isEmpty()) {
-                    dshoadon.get(holder.ref).setAmount(Float.valueOf(editable.toString()));
+            public void onFocusChange(View view, boolean b) {
+                if(!b){
+                    if(dshoadon.size() <= 0)
+                        return;
+                    dshoadon.get(holder.ref).setAmount(
+                            Float.valueOf(holder.etCount.getText().toString()));
+                    notifyDataSetChanged();
                 }
             }
-
+        });
+        holder.etCount.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if(keyEvent.getAction() == KeyEvent.ACTION_DOWN){
+                    holder.etCount.clearFocus();
+                    return false;
+                }
+                return false;
+            }
         });
         holder.ibRemoveProduct.setOnClickListener(removeProduct(position));
-
         return convertView;
     }
     private class ViewHolder {

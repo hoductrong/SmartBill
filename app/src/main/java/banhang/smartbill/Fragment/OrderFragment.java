@@ -2,6 +2,7 @@ package banhang.smartbill.Fragment;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -75,6 +76,7 @@ public class OrderFragment extends Fragment {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                btn_ad_order.setEnabled(false);
                 final CreateOrderDialog dialog = new CreateOrderDialog(getContext());
                 dialog.setContentView(R.layout.create_order_dialog);
                 dialog.setOnCloseButtonClickListener(new View.OnClickListener(){
@@ -103,6 +105,14 @@ public class OrderFragment extends Fragment {
                             dialog.dismiss();
                             Toast.makeText(getContext(),"Lỗi. Bạn phải xử lý hết các hóa đơn đã tạo",Toast.LENGTH_LONG).show();
                         }
+                    }
+                });
+                //enable button
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        btn_ad_order.setEnabled(true);
                     }
                 });
                 dialog.show();
