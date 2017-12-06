@@ -108,7 +108,7 @@ public class CustomerListAdapter extends ArrayAdapter<Customer> {
     }
 
     //find customer by name
-    public Customer contain(String customerName){
+    public Customer find(String customerName){
         for(Customer c : customerList){
             if(c.getName().toLowerCase().equals(customerName.toLowerCase())){
                 return c;

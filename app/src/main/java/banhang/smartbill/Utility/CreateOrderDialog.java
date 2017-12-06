@@ -100,7 +100,7 @@ public class CreateOrderDialog extends Dialog {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(adapter.contain(charSequence.toString()) != null)
+                if(adapter.find(charSequence.toString()) != null)
                     btn_create_order.setEnabled(true);
                 else
                     btn_create_order.setEnabled(false);
@@ -128,5 +128,10 @@ public class CreateOrderDialog extends Dialog {
             btn_create_order.setOnClickListener(listener);
         } else
             throw new NullPointerException();
+    }
+
+    //return customer is selected
+    public Customer getSelectedCustomer(){
+        return adapter.find(tv_customer.getText().toString());
     }
 }
