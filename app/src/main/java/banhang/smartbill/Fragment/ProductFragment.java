@@ -4,6 +4,7 @@ package banhang.smartbill.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
@@ -39,7 +40,7 @@ public class ProductFragment extends Fragment {
     View mView;
     Runnable runnableUI;
     ProductAPI product;
-
+    FloatingActionButton fbDetail;
     Handler handlerPost = new Handler();
     public ProductFragment() {
         // Required empty public constructor
@@ -63,8 +64,15 @@ public class ProductFragment extends Fragment {
         lvProduct = (ListView)mView.findViewById(R.id.lv_product);
         svSearch = (SearchView)mView.findViewById(R.id.sv_search);
         svSearch.setQueryHint("Search");
+        fbDetail = (FloatingActionButton)mView.findViewById(R.id.fb_to_detail);
         checkOrderCreated();
-
+        fbDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                OrderDetailFragment fragment = new OrderDetailFragment();
+                ((MainActivity)getActivity()).showFragment(fragment);
+            }
+        });
         svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override

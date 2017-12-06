@@ -52,11 +52,9 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment{
     OrderDetailAdapter adapter=null;
     FloatingActionButton fb_paid;
     ListView lvHoaDon=null;
-    String codeDetected;
     Handler handlerPost;
-    Handler handler;
+    Order orderSaved;
     View mView;
-    Runnable runnableUI;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,8 +95,7 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment{
                                 //Post Order len server
                                 Order order = new Order();
                                 order.setCustomerId(MainActivity.CurrentOrder.getCustomer().getId());
-                                order.setCustomer(MainActivity.CurrentOrder.getCustomer());
-                                order.setOrderProduct(arrProduct);
+                                order.setIdentityUserId("40119e8a-4f9a-4705-8c09-85d81b48c461");
                                 postOrder(order);
 
                             }
@@ -242,16 +239,19 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment{
     }
 
     public void postOrder(final Order order){
+
         final Handler handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
 
                 switch (msg.what){
-                    case 1: Toast.makeText(getContext(),"Tạo hóa đơn thành công",Toast.LENGTH_LONG).show();
+                    case 1: /*Toast.makeText(getContext(),"Tạo hóa đơn thành công",Toast.LENGTH_LONG).show();
                             MainActivity.CurrentOrder=null;
                             OrderFragment fragment = new OrderFragment();
-                            ((MainActivity)getActivity()).showFragment(fragment);
+                            ((MainActivity)getActivity()).showFragment(fragment);*/
+                            putOrder((Order)msg.obj,MainActivity.CurrentOrder.getOrderProducts());
+                            break;
 
                     case 2 : //error unauthorize
                         Toast.makeText(getContext(),R.string.unauthorize,Toast.LENGTH_LONG).show();
@@ -267,6 +267,47 @@ public class OrderDetailFragment extends android.support.v4.app.Fragment{
                 try{
                     OrdersAPI api = new OrdersAPI();
                     Order orders = api.postOrder(order);
+                    Message message = handler.obtainMessage(1,orders);
+                    handler.sendMessage(message);
+
+
+                }catch(UnauthorizedAccessException ex){
+                    Message message = handler.obtainMessage(2,"Unauthorize");
+                    handler.sendMessage(message);
+                }
+            }
+        });
+        postOrderThread.start();
+    }
+    public void putOrder(final Order order,final List<OrderProduct> products){
+
+        final Handler handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+
+                switch (msg.what){
+                    case 1: Toast.makeText(getContext(),"Tạo hóa đơn thành công",Toast.LENGTH_LONG).show();
+                            MainActivity.CurrentOrder=null;
+                            Runtime.getRuntime().gc();
+                            OrderFragment fragment = new OrderFragment();
+                            ((MainActivity)getActivity()).showFragment(fragment);
+                            break;
+
+                    case 2 : //error unauthorize
+                        Toast.makeText(getContext(),R.string.unauthorize,Toast.LENGTH_LONG).show();
+                        MainActivity.requireLogin(getContext());
+                        break;
+
+                }
+            }
+        };
+        Thread postOrderThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    OrdersAPI api = new OrdersAPI();
+                    List<OrderProduct> orders = api.putOrderProduct(order.getId(),products);
                     Message message = handler.obtainMessage(1,orders);
                     handler.sendMessage(message);
 
